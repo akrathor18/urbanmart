@@ -1,21 +1,12 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
-
+import authRoutes from "./routes/auth.route.js";
 const app = express();
 const prisma = new PrismaClient();
 
 app.use(express.json());
 
-app.post("/users", async (req, res) => {
-  const user = await prisma.user.create({
-    data: {
-      name: "Ashish",
-      email: "ashish@gmail.com",
-      password: "123456",
-    },
-  });
-  res.json(user);
-});
+app.use("/auth", authRoutes);
 app.get("/", (req, res) => {
   res.status(201).json("hello world");
 });
