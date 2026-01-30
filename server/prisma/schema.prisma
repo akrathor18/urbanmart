@@ -118,7 +118,7 @@ model Product {
   categoryId    Int
   rating        Int
   review        Int
-  freatures     String[]
+  features     String[]
   category      Category       @relation(fields: [categoryId], references: [id])
   cartItems     CartItem[]
   wishlistItems WishlistItem[]
