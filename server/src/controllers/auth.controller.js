@@ -3,7 +3,15 @@ import { generateToken } from "../utils/jwt.js";
 export const register = async (req, res) => {
   try {
     const user = await authService.registerUser(req.body);
-    const token = generateToken({ id: user.id, email: user.email, role: user.role });
+    const token = generateToken({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
     res.status(201).json({
       message: "User registered successfully",
       token,
@@ -14,16 +22,23 @@ export const register = async (req, res) => {
   }
 };
 
-
 export const login = async (req, res) => {
-    try {
-        const user = await authService.loginUser(req.body.email, req.body.password);
-        const token = generateToken({ id: user.id, email: user.email, role: user.role });
-        res.status(200).json({
-            message: "Login successful",
-            token,
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
+  try {
+    const user = await authService.loginUser(req.body.email, req.body.password);
+    const token = generateToken({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
