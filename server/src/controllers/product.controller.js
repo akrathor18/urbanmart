@@ -17,7 +17,6 @@ export const getAllProducts = async (req, res )=>{
     try {
         const product= await productService.getAllProducts();
         res.status(200).json({
-            message: "Products fetched successfully",
             product,
         });
     } catch (error) {

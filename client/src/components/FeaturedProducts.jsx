@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
-
+import {useProductStore}from '../store/useProductStore.js'
+import { useEffect } from "react";
 export default function FeaturedProducts() {
+
+    const {fetchProducts, featuredProducts} = useProductStore()
+useEffect(() => {
+ fetchProducts()
+ console.log(featuredProducts)
+}, [])
+
   return (
     <section className="py-16">
       <div className="max-w-7xl mx-auto px-4">
@@ -27,7 +35,7 @@ export default function FeaturedProducts() {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {featuredProducts.map((_, i) => (
             <ProductCard key={i} />
           ))}
         </div>
