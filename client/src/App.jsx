@@ -1,9 +1,11 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Navbar from "./components/NavBar.jsx";
-import Hero from "./components/Hero.jsx";
-import FeaturedProducts from "./components/FeaturedProducts.jsx";
+import Hero from "./components/home/Hero.jsx";
+import FeaturedProducts from "./components/home/FeaturedProducts.jsx";
 import "./App.css";
+import Categories from "./components/home/Categories.jsx";
+import Footer from "./components/Footer.jsx";
 
 function App() {
   return (
@@ -11,6 +13,8 @@ function App() {
       <Navbar />
       <Hero />
       <FeaturedProducts />
+      <Categories/>
+      <Footer/>
     </>
   );
 }

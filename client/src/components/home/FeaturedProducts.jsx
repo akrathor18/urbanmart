@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
-import {useProductStore}from '../store/useProductStore.js'
+import { useProductStore } from '../../store/useProductStore.js'
+import ProductCardSkeleton from "./ProductCardSkeleton.jsx";
+import ErrorState from "../ErrorState.jsx";
+
 import { useEffect } from "react";
 export default function FeaturedProducts() {
 
-    const {fetchProducts, featuredProducts} = useProductStore()
-useEffect(() => {
- fetchProducts()
- console.log(featuredProducts)
-}, [])
+  const { fetchProducts, featuredProducts, loading, error } = useProductStore()
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
   return (
     <section className="py-16">
@@ -33,11 +35,13 @@ useEffect(() => {
           </Link>
         </div>
 
+          {error &&(<ErrorState/>)}
+          {loading &&(<ProductCardSkeleton/>)}
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((_, i) => (
-            <ProductCard key={i} />
-          ))}
+          {!loading && !error && (featuredProducts.map((items) => (
+            <ProductCard productData={items} key={items.id} />
+          )))}
         </div>
 
         {/* Mobile CTA */}

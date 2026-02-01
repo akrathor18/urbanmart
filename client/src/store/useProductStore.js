@@ -12,9 +12,8 @@ export const useProductStore = create((set) => ({
     try {
       const resp = await fetch("http://localhost:5000/api/products");
       const data = await resp.json();
-        console.log(data)
       set({
-        products: data,
+        products: data.product,
         featuredProducts: data.product.slice(0, 8),
         loading: false,
       });
