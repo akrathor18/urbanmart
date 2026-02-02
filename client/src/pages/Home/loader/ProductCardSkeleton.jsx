@@ -3,8 +3,8 @@ export default function ProductCardSkeleton() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {Array.from({ length: 8}).map((_, i) => (
-                <div className="border rounded-xl overflow-hidden animate-pulse">
-
+                <div key={i} className="border rounded-xl overflow-hidden animate-pulse">
+                
                     {/* Image skeleton */}
                     <div className="h-56 bg-gray-200" />
 

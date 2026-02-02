@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "@/layout/MainLayout";
-import Home from "@/pages/Home";
+import Home from "@/pages/Home/Home.jsx";
 
-import Products from "@/pages/Products";
-export default function AppRoutes() {
+import Products from "@/pages/Products/Products.jsx";
+export default function Pages() {
   return (
     <Routes>
       <Route element={<MainLayout />}>

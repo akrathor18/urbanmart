@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
-import { useProductStore } from '../../store/useProductStore.js'
-import ProductCardSkeleton from "./ProductCardSkeleton.jsx";
-import ErrorState from "../ErrorState.jsx";
+import { useProductStore } from '@/store/useProductStore.js'
+import ProductCardSkeleton from "@/pages/Home/loader/ProductCardSkeleton.jsx";
+import ErrorState from "@/components/ErrorState.jsx";
 
 import { useEffect } from "react";
 export default function FeaturedProducts() {

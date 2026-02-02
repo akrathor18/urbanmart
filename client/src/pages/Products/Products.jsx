@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useProductStore } from "../../store/useProductStore.js";
-import ProductCardSkeleton from "../home/ProductCardSkeleton.jsx";
-import ErrorState from "../ErrorState.jsx";
-import ProductCard from "./productCards.jsx";
+import ProductCardSkeleton from "../Home/loader/ProductCardSkeleton.jsx";
+import ErrorState from "../../components/ErrorState.jsx";
+import ProductCard from "./ProductsCard/ProductCards.jsx";
 export default function ProductsPage() {
   const { fetchProducts, products, loading, error } = useProductStore();
   useEffect(() => {

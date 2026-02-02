@@ -1,5 +1,5 @@
-import FeaturedProducts from '../components/home/FeaturedProducts.jsx'
-import Hero from '../components/home/Hero.jsx'
+import FeaturedProducts from '@/pages/Home/FeaturedProducts/FeaturedProducts.jsx'
+import Hero from './Hero/Hero.jsx'
 import React from 'react'
 
 function Home() {

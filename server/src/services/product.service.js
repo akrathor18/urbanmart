@@ -13,6 +13,14 @@ import { prisma } from "../config/db.js";
   });
 
 }
+
+const getProductsById = async (id)=>{
+  return await prisma.product.findUnique({
+    where:{
+      id: id
+    }
+  })
+}
 const getProductsByCategory = async (categoryId) => {
   return await prisma.product.findMany({
     where: {
@@ -23,4 +31,4 @@ const getProductsByCategory = async (categoryId) => {
     },
   });
 };
-export { createProduct, getAllProducts, getProductsByCategory };
+export { createProduct, getAllProducts, getProductsByCategory, getProductsById };
