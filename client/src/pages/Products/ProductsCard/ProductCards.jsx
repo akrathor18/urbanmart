@@ -1,6 +1,8 @@
 import React from "react";
 import { Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 function ProductCards({ products }) {
+  const navigate= useNavigate()
   return (
     <div className="border rounded-xl p-4 hover:shadow-md transition">
       <img
@@ -33,7 +35,7 @@ function ProductCards({ products }) {
             {products.rating} ({products.review})
           </span>
         </div>
-        <button className="text-sm border px-3 py-1 rounded-lg">View</button>
+        <button onClick={()=>{navigate(`/products/${products.id}`)}} className="text-sm border px-3 py-1 rounded-lg">View</button>
       </div>
     </div>
   );

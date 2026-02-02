@@ -14,27 +14,24 @@ import {
 
 import { useProductStore } from "@/store/useProductStore";
 import ProductCard from "@/components/ProductCard";
-import { formatPrice } from "@/utils/currency";
+import ErrorState from "@/components/ErrorState";
 
 export default function ProductDetail() {
   const { id } = useParams();
 
-  const {
-    product,
-    products,
-    loading,
-    fetchProductById,
-  } = useProductStore();
+  const { fetchProducts, product, products, loadingProduct, fetchProductById, error } =
+    useProductStore();
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
+    fetchProducts()
     fetchProductById(id);
-  }, [id, fetchProductById]);
+  }, []);
 
   // Loading state
-  if (loading || !product) {
+  if (loadingProduct || !product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-600">Loading product...</p>
@@ -42,30 +39,36 @@ export default function ProductDetail() {
     );
   }
 
+  if (error) return <ErrorState />;
+
   // Related products (safe category comparison)
   const relatedProducts = products
     ?.filter(
-      (p) =>
-        p.category?.id === product.category?.id &&
-        p.id !== product.id
+      (p) => p.category?.id === product.category?.id && p.id !== product.id,
     )
     .slice(0, 4);
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="max-w-7xl mx-auto px-4">
-        
         {/* Breadcrumb */}
         <div className="flex items-center text-sm text-gray-600 mb-6">
-          <Link to="/" className="hover:text-gray-900">Home</Link>
+          <Link to="/" className="hover:text-gray-900">
+            Home
+          </Link>
           <span className="mx-2">/</span>
-          <Link to="/products" className="hover:text-gray-900">Products</Link>
+          <Link to="/products" className="hover:text-gray-900">
+            Products
+          </Link>
           <span className="mx-2">/</span>
           <span className="text-gray-900 truncate">{product.name}</span>
         </div>
 
         {/* Back */}
-        <Link to="/products" className="inline-flex items-center text-blue-600 mb-6">
+        <Link
+          to="/products"
+          className="inline-flex items-center text-blue-600 mb-6"
+        >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Products
         </Link>
@@ -73,7 +76,6 @@ export default function ProductDetail() {
         {/* Main Card */}
         <div className="bg-white rounded-xl shadow-sm">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
-            
             {/* Images */}
             <div>
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4">
@@ -123,25 +125,48 @@ export default function ProductDetail() {
                   />
                 ))}
                 <span className="ml-2 text-gray-600">
-                  {product.rating} ({product.reviews} reviews)
+                  {product.rating} ({product.review} reviews)
                 </span>
               </div>
 
               {/* Price */}
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-3xl font-bold">
-                  {formatPrice(product.price)}
-                </span>
-                {product.originalPrice > product.price && (
-                  <span className="line-through text-gray-500">
-                    {formatPrice(product.originalPrice)}
-                  </span>
-                )}
+                <span className="text-3xl font-bold">{product.price}</span>
               </div>
 
               {/* Description */}
               <p className="text-gray-600 mb-6">{product.description}</p>
+              {/* Features */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
+                  Key Features:
+                </h3>
+                {console.log(product)}
+                <ul className="space-y-2">
+                  {product.features.map((feature, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center text-gray-600 text-sm sm:text-base"
+                    >
+                      <div className="w-2 h-2 bg-blue-600 rounded-full mr-3 flex-shrink-0"></div>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
+              {/* Stock Status */}
+              <div className="mb-6">
+                {product.inStock ? (
+                  <span className="text-green-600 font-medium text-sm sm:text-base">
+                    ✓ In Stock ({product.stock} available)
+                  </span>
+                ) : (
+                  <span className="text-red-600 font-medium text-sm sm:text-base">
+                    ✗ Out of Stock
+                  </span>
+                )}
+              </div>
               {/* Quantity */}
               <div className="flex items-center gap-4 mb-8">
                 <div className="flex border rounded-lg">
