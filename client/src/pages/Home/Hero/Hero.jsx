@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-
 export default function Hero() {
+
   return (
     <section className="relative bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
         {/* Left Content */}
         <div className="space-y-6">
           <span className="inline-block bg-blue-100 text-blue-600 text-sm font-medium px-4 py-1 rounded-full">

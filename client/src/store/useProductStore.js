@@ -37,6 +37,7 @@ export const useProductStore = create((set, get) => ({
 
     try {
       const data = await api.get(`/api/products/${id}`);
+      console.log(data)
       set({
         product: data,
         loadingProduct: false,

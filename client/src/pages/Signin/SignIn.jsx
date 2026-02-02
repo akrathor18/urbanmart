@@ -3,14 +3,15 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { User, Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { validationRules } from "@/utils/validation.js";
-
+import { useAuthStore } from "@/store/useAuthStore";
 /* ---------------- DEMO CREDENTIALS ---------------- */
 const DEMO_CREDENTIALS = {
-  email: "demo@shophub.com",
+  email: "demo@UrbanMart.com",
   password: "demo123",
 };
 
 export default function Signin() {
+    const {signIn, isSigning} = useAuthStore()
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,26 +35,11 @@ export default function Signin() {
     },
   });
 
-  /* ---------------- AUTH CHECK ---------------- */
-  const authenticate = (email, password) => {
-    if (
-      email === DEMO_CREDENTIALS.email &&
-      password === DEMO_CREDENTIALS.password
-    ) {
-      return true;
-    }
-    throw new Error("Invalid email or password");
-  };
-
   /* ---------------- NORMAL LOGIN ---------------- */
   const onSubmit = async (data) => {
-    setIsLoading(true);
-    clearErrors();
-
     try {
-      await new Promise((r) => setTimeout(r, 800)); // fake API delay
-      authenticate(data.email, data.password);
-      navigate(from, { replace: true });
+        signIn(data)
+     
     } catch (err) {
       setError("root", { message: err.message });
     } finally {
@@ -65,18 +51,6 @@ export default function Signin() {
   const handleDemoLogin = async () => {
     setValue("email", DEMO_CREDENTIALS.email);
     setValue("password", DEMO_CREDENTIALS.password);
-
-    setIsLoading(true);
-    clearErrors();
-
-    try {
-      await new Promise((r) => setTimeout(r, 500));
-      navigate(from, { replace: true });
-    } catch {
-      setError("root", { message: "Demo login failed" });
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -108,7 +82,7 @@ export default function Signin() {
 
             <div className="font-medium text-gray-900">Demo User</div>
             <div className="text-sm text-gray-600">
-              demo@shophub.com · demo123
+              demo@UrbanMart.com · demo123
             </div>
           </button>
 

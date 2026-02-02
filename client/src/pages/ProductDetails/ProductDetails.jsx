@@ -41,9 +41,9 @@ export default function ProductDetail() {
     );
   }
 
-  if(!product){
-    return <ProductNotFound/>
-  }
+//   if(!loadingProduct &&!product){
+//     return <ProductNotFound/>
+//   }
 
   if (error) return <ErrorState />;
 

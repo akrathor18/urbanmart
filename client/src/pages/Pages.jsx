@@ -6,6 +6,7 @@ import Products from "@/pages/Products/Products.jsx";
 import NotFound from "./NotFound/NotFound";
 import Signin from "./Signin/SignIn";
 import SignUp from "./SignUp/SignUp";
+import Account from "./Account/Account";
 
 export default function Pages() {
   return (
@@ -16,6 +17,7 @@ export default function Pages() {
         <Route path="/products/:id" element={<ProductDetail />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/account" element={<Account />} />
         {/* <Route path="/cart" element={<Cart />} /> */}
       </Route>
 

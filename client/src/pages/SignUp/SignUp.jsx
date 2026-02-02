@@ -12,8 +12,10 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { validationRules } from "@/utils/validation.js";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Signup() {
+    const {signUp} = useAuthStore()
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -44,26 +46,9 @@ export default function Signup() {
   const password = watch("password");
 
   /* ---------------- SUBMIT ---------------- */
-  const onSubmit = async () => {
-    setIsLoading(true);
-    clearErrors();
-
-    try {
-      // simulate API request
-      await new Promise((r) => setTimeout(r, 1200));
-      setSuccess(true);
-
-      // redirect after success
-      setTimeout(() => {
-        navigate("/signin");
-      }, 2000);
-    } catch {
-      setError("root", {
-        message: "Something went wrong. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const onSubmit = async (data) => {
+   console.log(data)
+   signUp(data)
   };
 
   /* ---------------- SUCCESS SCREEN ---------------- */
@@ -105,7 +90,7 @@ export default function Signup() {
               <User className="h-7 w-7 text-blue-600" />
             </div>
             <h1 className="text-2xl font-bold">Create Your Account</h1>
-            <p className="text-gray-600">Join Shophub and start shopping</p>
+            <p className="text-gray-600">Join UrbanMart and start shopping</p>
           </div>
 
           {/* Form */}

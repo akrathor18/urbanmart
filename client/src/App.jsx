@@ -1,8 +1,23 @@
 import React from "react";
 import "./App.css";
 import Pages from "./pages/Pages.jsx";
+import { ToastContainer } from 'react-toastify';
+
 function App() {
- return <Pages />;
+  return (
+    <>
+     <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                closeOnClick
+                pauseOnHover
+                draggable
+                theme="dark"
+            />
+    <Pages />
+    </>
+  );
 }
 
 export default App;
