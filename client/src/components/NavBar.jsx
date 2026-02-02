@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { ShoppingCart, Heart, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, Heart, Search, Menu, X, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -86,6 +86,17 @@ export default function Navbar() {
               >
                 <Heart className="h-5 w-5 text-neutral-700 group-hover:fill-red-500 group-hover:text-red-500 transition-all" />
               </Button>
+
+              {/* user */}
+              <Link to="/signin">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative hover:bg-neutral-100 transition-colors group"
+                >
+              <User2 className="h-5 w-5 text-neutral-700 group-hover:scale-110 transition-transform"/>
+                </Button>
+              </Link>
 
               {/* Cart */}
               <Link to="/cart">

@@ -4,6 +4,9 @@ import Home from "@/pages/Home/Home.jsx";
 import ProductDetail from "@/pages/ProductDetails/ProductDetails.jsx";
 import Products from "@/pages/Products/Products.jsx";
 import NotFound from "./NotFound/NotFound";
+import Signin from "./Signin/SignIn";
+import SignUp from "./SignUp/SignUp";
+
 export default function Pages() {
   return (
     <Routes>
@@ -11,6 +14,8 @@ export default function Pages() {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<SignUp />} />
         {/* <Route path="/cart" element={<Cart />} /> */}
       </Route>
 
