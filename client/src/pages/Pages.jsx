@@ -3,6 +3,7 @@ import MainLayout from "@/layout/MainLayout";
 import Home from "@/pages/Home/Home.jsx";
 import ProductDetail from "@/pages/ProductDetails/ProductDetails.jsx";
 import Products from "@/pages/Products/Products.jsx";
+import NotFound from "./NotFound/NotFound";
 export default function Pages() {
   return (
     <Routes>
@@ -13,7 +14,7 @@ export default function Pages() {
         {/* <Route path="/cart" element={<Cart />} /> */}
       </Route>
 
-      {/* <Route path="*" element={<NotFound />} /> */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

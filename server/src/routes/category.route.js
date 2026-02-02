@@ -2,6 +2,6 @@ import { getAllCategories, createCategory } from "../controllers/category.contro
 
 import express from "express";
 const router = express.Router();
-router.post("/", createCategory);
-router.get("/", getAllCategories);
+router.post("/categories", createCategory);
+router.get("/categories", getAllCategories);
 export default router;

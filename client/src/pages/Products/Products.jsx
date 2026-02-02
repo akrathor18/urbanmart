@@ -3,9 +3,13 @@ import { useProductStore } from "../../store/useProductStore.js";
 import ProductCardSkeleton from "../Home/loader/ProductCardSkeleton.jsx";
 import ErrorState from "../../components/ErrorState.jsx";
 import ProductCard from "./ProductsCard/ProductCards.jsx";
+
+import { useCategoryStore } from "@/store/useCategoryStore";
 export default function ProductsPage() {
   const { fetchProducts, products, loading, error } = useProductStore();
+  const {fetchCategories, categories} = useCategoryStore()
   useEffect(() => {
+    fetchCategories()
     fetchProducts();
   }, []);
 
@@ -22,18 +26,11 @@ export default function ProductsPage() {
           <div className="mb-6">
             <h3 className="font-medium mb-3">Category</h3>
             <div className="space-y-2 text-sm text-gray-600">
-              <label className="flex items-center gap-2">
+              {console.log(categories)}
+              {categories.map((items)=>( <label className="flex items-center gap-2">
                 <input type="checkbox" />
-                Electronics
-              </label>
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                Accessories
-              </label>
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                Fashion
-              </label>
+                {items.name}
+              </label>))}
             </div>
           </div>
 

@@ -15,7 +15,7 @@ import {
 import { useProductStore } from "@/store/useProductStore";
 import ProductCards from "@/pages/Products/ProductsCard/ProductCards.jsx";
 import ErrorState from "@/components/ErrorState";
-
+import ProductNotFound from "./ProductNotFound/ProductNotFound";
 export default function ProductDetail() {
   const { id } = useParams();
   const fetchProducts = useProductStore((state) => state.fetchProducts);
@@ -24,7 +24,6 @@ export default function ProductDetail() {
   const loadingProduct = useProductStore((state) => state.loadingProduct);
   const error = useProductStore((state) => state.error);
   const fetchProductById = useProductStore((state) => state.fetchProductById);
-
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
@@ -34,12 +33,16 @@ export default function ProductDetail() {
   }, [id, fetchProductById]);
 
   // Loading state
-  if (loadingProduct || !product) {
+  if (loadingProduct) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-600">Loading product...</p>
       </div>
     );
+  }
+
+  if(!product){
+    return <ProductNotFound/>
   }
 
   if (error) return <ErrorState />;

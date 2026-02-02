@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", authRoutes);
 app.use("/api", productRoutes);
-app.use("/categories", categoryRoutes);
+app.use("/api", categoryRoutes);
 app.use("/orders", orderRoutes);
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
