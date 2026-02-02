@@ -16,6 +16,7 @@ import { useProductStore } from "@/store/useProductStore";
 import ProductCards from "@/pages/Products/ProductsCard/ProductCards.jsx";
 import ErrorState from "@/components/ErrorState";
 import ProductNotFound from "./ProductNotFound/ProductNotFound";
+import { useCartStore } from "@/store/useCartStore";
 export default function ProductDetail() {
   const { id } = useParams();
   const fetchProducts = useProductStore((state) => state.fetchProducts);
@@ -26,7 +27,7 @@ export default function ProductDetail() {
   const fetchProductById = useProductStore((state) => state.fetchProductById);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-
+const {addToCart}= useCartStore()
   useEffect(() => {
     fetchProducts();
     fetchProductById(id);
@@ -196,6 +197,7 @@ export default function ProductDetail() {
 
                 <button
                   disabled={!product.inStock}
+                  onClick={()=>(addToCart(product))}
                   className="bg-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 disabled:bg-gray-400"
                 >
                   <ShoppingCart className="h-5 w-5" />

@@ -7,6 +7,7 @@ import NotFound from "./NotFound/NotFound";
 import Signin from "./Signin/SignIn";
 import SignUp from "./SignUp/SignUp";
 import Account from "./Account/Account";
+import Cart from "./Cart/Cart";
 
 export default function Pages() {
   return (
@@ -18,7 +19,7 @@ export default function Pages() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/account" element={<Account />} />
-        {/* <Route path="/cart" element={<Cart />} /> */}
+        <Route path="/cart" element={<Cart />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
