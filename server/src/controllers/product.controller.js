@@ -24,3 +24,17 @@ export const getAllProducts = async (req, res )=>{
         res.status(500).json({ message: error.message || "Internal Server Error" });
     }
 }
+
+export const getProductsByCategory = async (req, res )=>{
+    try {
+        const product= await productService.getProductsByCategory();
+        res.status(200).json({
+            product,
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.message || "Internal Server Error" });
+    }
+}
+
+getProductsByCategory
