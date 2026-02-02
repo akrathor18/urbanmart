@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import { Clock, Phone, Mail } from "lucide-react";
 export default function Footer() {
   return (
     <footer className="bg-gray-950 text-gray-300">
@@ -44,10 +44,10 @@ export default function Footer() {
           {/* Support */}
           <div>
             <h3 className="text-white font-semibold mb-4">Support</h3>
-            <ul className="space-y-2 text-sm">
-              <li>📧 support@urbanmart.com</li>
-              <li>📞 +91 98765 43210</li>
-              <li>🕒 Mon – Sat, 9AM – 6PM</li>
+            <ul className="space-y-2 text-sm ">
+              <li className="flex gap-3.5 "><Mail size={20} className="text-blue-500"/> support@urbanmart.com</li>
+              <li className="flex gap-3.5 "><Phone size={20} className="text-blue-500" /> +91 98765 43210</li>
+              <li className="flex gap-3.5 "><Clock size={20} className="text-blue-500"/> Mon – Sat, 9AM – 6PM</li>
             </ul>
           </div>
 
