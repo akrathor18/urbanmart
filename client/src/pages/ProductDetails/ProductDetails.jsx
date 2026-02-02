@@ -13,22 +13,25 @@ import {
 } from "lucide-react";
 
 import { useProductStore } from "@/store/useProductStore";
-import ProductCard from "@/components/ProductCard";
+import ProductCards from "@/pages/Products/ProductsCard/ProductCards.jsx";
 import ErrorState from "@/components/ErrorState";
 
 export default function ProductDetail() {
   const { id } = useParams();
-
-  const { fetchProducts, product, products, loadingProduct, fetchProductById, error } =
-    useProductStore();
+  const fetchProducts = useProductStore((state) => state.fetchProducts);
+  const product = useProductStore((state) => state.product);
+  const products = useProductStore((state) => state.products);
+  const loadingProduct = useProductStore((state) => state.loadingProduct);
+  const error = useProductStore((state) => state.error);
+  const fetchProductById = useProductStore((state) => state.fetchProductById);
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    fetchProducts()
+    fetchProducts();
     fetchProductById(id);
-  }, []);
+  }, [id, fetchProductById]);
 
   // Loading state
   if (loadingProduct || !product) {
@@ -80,6 +83,7 @@ export default function ProductDetail() {
             <div>
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4">
                 <img
+                  loading="lazy"
                   src={product.images?.[selectedImage] || product.image}
                   alt={product.name}
                   className="w-full h-full object-cover"
@@ -221,7 +225,7 @@ export default function ProductDetail() {
             <h2 className="text-2xl font-bold mb-6">Related Products</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((p) => (
-                <ProductCard key={p.id} product={p} />
+                <ProductCards key={p.id} products={p} />
               ))}
             </div>
           </div>

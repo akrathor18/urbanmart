@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ProductCard from "@/components/ProductCard";
+import ProductCards from "@/pages/Products/ProductsCard/ProductCards.jsx";
 import { Button } from "@/components/ui/button";
 import { useProductStore } from '@/store/useProductStore.js'
 import ProductCardSkeleton from "@/pages/Home/loader/ProductCardSkeleton.jsx";
@@ -40,7 +40,7 @@ export default function FeaturedProducts() {
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {!loadingProducts && !error && (featuredProducts.map((items) => (
-            <ProductCard productData={items} key={items.id} />
+            <ProductCards products={items} key={items.id} />
           )))}
         </div>
 

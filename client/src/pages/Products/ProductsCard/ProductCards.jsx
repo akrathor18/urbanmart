@@ -3,9 +3,11 @@ import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 function ProductCards({ products }) {
   const navigate= useNavigate()
+  console.log(products)
   return (
     <div className="border rounded-xl p-4 hover:shadow-md transition">
       <img
+        loading="lazy"
         src={products.image || "/placeholder.svg"}
         alt={products.name}
         className="w-full h-48 sm:h-56 md:h-64 object-cover group-hover:scale-105 transition-transform duration-300"

@@ -18,7 +18,10 @@ const getProductsById = async (id)=>{
   return await prisma.product.findUnique({
     where:{
       id: id
-    }
+    },
+    include: {
+      category: true,
+    },
   })
 }
 const getProductsByCategory = async (categoryId) => {
