@@ -15,15 +15,16 @@ export const createProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const product = await productService.getAllProducts();
-    res.status(200).json({
-      product,
-    });
+    const result = await productService.getFilteredProducts(req.query)
+
+    res.status(200).json(result)
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message || "Internal Server Error" });
+    console.error(error)
+    res.status(500).json({
+      message: "Failed to fetch products",
+    })
   }
-};
+}
 
 export const getProductsByCategory = async (req, res) => {
   try {
@@ -50,5 +51,3 @@ export const getProductsById = async (req, res) => {
     res.status(500).json({ message: error.message || "Internal Server Error" });
   }
 };
-
-getProductsByCategory;

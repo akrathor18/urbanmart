@@ -19,8 +19,8 @@ export const useProductStore = create((set, get) => ({
     try {
       const data = await api.get("/api/products");
       set({
-        products: data.product,
-        featuredProducts: data.product.slice(0, 8),
+        products: data.products,
+        featuredProducts: data.products.slice(0, 8),
         loadingProducts: false,
       });
     } catch (error) {
