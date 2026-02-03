@@ -7,8 +7,7 @@ function ProductCard({ products }) {
   const navigate = useNavigate();
   const inStock = products.inStock;
   const { addToCart } = useCartStore();
-  const { toggleWishlist, wishlist } = useWishlistStore();
-  const isWishlisted = wishlist.some((item) => item.id === products.id);
+  const { toggleWishlist, isWishlisted } = useWishlistStore();
   return (
     <div
       onClick={() => navigate(`/products/${products.id}`)}
@@ -23,13 +22,13 @@ function ProductCard({ products }) {
           toggleWishlist(products);
         }}
         className={`absolute top-3 right-3 z-2 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-full shadow-md transition-colors ${
-          isWishlisted
+          isWishlisted(products.id)
             ? "bg-red-500 text-white hover:bg-red-600"
             : "bg-white text-gray-600 hover:bg-gray-50"
         }`}
       >
         <Heart
-          className={`h-4 w-4 sm:h-5 sm:w-5 ${isWishlisted ? "fill-current" : ""}`}
+          className={`h-4 w-4 sm:h-5 sm:w-5 ${isWishlisted(products.id) ? "fill-current" : ""}`}
         />
       </button>
 
