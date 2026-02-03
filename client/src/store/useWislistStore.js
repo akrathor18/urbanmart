@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 
 export const useWishlistStore = create(
   persist(
-    (set) => ({
+    (set,get) => ({
       wishlist: [],
       toggleWishlist: (product) => {
         set((state) => {
@@ -21,6 +21,10 @@ export const useWishlistStore = create(
         set((state) => ({
           wishlist: state.wishlist.filter((i) => i.id !== id),
         }));
+      },
+
+      isWishlisted: (id) => {
+        return get().wishlist.some((item) => item.id === id);
       },
     }),
     {

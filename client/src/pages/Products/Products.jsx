@@ -26,9 +26,9 @@ export default function ProductsPage() {
           <div className="mb-6">
             <h3 className="font-medium mb-3">Category</h3>
             <div className="space-y-2 text-sm text-gray-600">
-              {console.log(categories)}
-              {categories.map((items)=>( <label className="flex items-center gap-2">
-                <input type="checkbox" />
+              {categories.map((items)=>(
+                 <label key={items.name} className="flex items-center gap-2">
+                <input key={items.name} type="checkbox" />
                 {items.name}
               </label>))}
             </div>
@@ -84,7 +84,7 @@ export default function ProductsPage() {
           {loading && <ProductCardSkeleton />}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {products.map((i) => (
-             <ProductCard key={i} products={i}/>
+             <ProductCard key={i.id} products={i}/>
             ))}
           </div>
 

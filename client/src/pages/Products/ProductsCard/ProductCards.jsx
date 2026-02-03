@@ -117,7 +117,7 @@ function ProductCard({ products }) {
 
       {/* Mobile actions */}
       {inStock && (
-        <div className="mt-3 flex gap-2 sm:hidden">
+        <div className="mt-3 flex gap-2 md:hidden">
           <button
             onClick={(e) => {
               e.stopPropagation();

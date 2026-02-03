@@ -12,22 +12,26 @@ import {
   Minus,
 } from "lucide-react";
 
-import { useProductStore } from "@/store/useProductStore";
 import ProductCards from "@/pages/Products/ProductsCard/ProductCards.jsx";
 import ErrorState from "@/components/ErrorState";
 import ProductNotFound from "./ProductNotFound/ProductNotFound";
 import { useCartStore } from "@/store/useCartStore";
+import { useProductStore } from "@/store/useProductStore";
+import { useWishlistStore } from "@/store/useWislistStore";
 export default function ProductDetail() {
   const { id } = useParams();
+
   const fetchProducts = useProductStore((state) => state.fetchProducts);
   const product = useProductStore((state) => state.product);
   const products = useProductStore((state) => state.products);
   const loadingProduct = useProductStore((state) => state.loadingProduct);
   const error = useProductStore((state) => state.error);
   const fetchProductById = useProductStore((state) => state.fetchProductById);
+  const { addToCart } = useCartStore();
+  const { toggleWishlist, isWishlisted } = useWishlistStore();
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-const {addToCart}= useCartStore()
   useEffect(() => {
     fetchProducts();
     fetchProductById(id);
@@ -42,8 +46,8 @@ const {addToCart}= useCartStore()
     );
   }
 
-  if(!loadingProduct &&!product){
-    return <ProductNotFound/>
+  if (!loadingProduct && !product) {
+    return <ProductNotFound />;
   }
 
   if (error) return <ErrorState />;
@@ -117,7 +121,14 @@ const {addToCart}= useCartStore()
             <div>
               <div className="flex justify-between mb-4">
                 <h1 className="text-3xl font-bold">{product.name}</h1>
-                <Heart className="h-6 w-6 text-gray-400" />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleWishlist(product);
+                  }}
+                >
+                  <Heart className={`h-6 w-6 ${isWishlisted(product.id)?`text-red-400 fill-red-400`:`text-gray-400 `}`} />
+                </button>
               </div>
 
               {/* Rating */}
@@ -149,7 +160,6 @@ const {addToCart}= useCartStore()
                 <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
                   Key Features:
                 </h3>
-                {console.log(product)}
                 <ul className="space-y-2">
                   {product.features.map((feature, index) => (
                     <li
@@ -197,7 +207,7 @@ const {addToCart}= useCartStore()
 
                 <button
                   disabled={!product.inStock}
-                  onClick={()=>(addToCart(product))}
+                  onClick={() => addToCart(product, quantity)}
                   className="bg-black text-white px-6 py-3 rounded-lg flex items-center gap-2 disabled:bg-gray-400"
                 >
                   <ShoppingCart className="h-5 w-5" />
