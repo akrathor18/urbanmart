@@ -8,6 +8,7 @@ import Signin from "./Signin/SignIn";
 import SignUp from "./SignUp/SignUp";
 import Account from "./Account/Account";
 import Cart from "./Cart/Cart";
+import Wishlist from "./Wishlist/Wishlist";
 export default function Pages() {
   return (
     <Routes>
@@ -19,6 +20,7 @@ export default function Pages() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/account" element={<Account />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

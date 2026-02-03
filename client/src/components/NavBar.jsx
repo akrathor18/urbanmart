@@ -7,7 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCartStore } from "@/store/useCartStore";
 
 export default function Navbar() {
-  const {cart} = useCartStore()
+  const { cart } = useCartStore();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -80,13 +80,22 @@ export default function Navbar() {
               </Button>
 
               {/* Wishlist */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hidden sm:flex hover:bg-neutral-100 transition-all duration-200 group"
-              >
-                <Heart className="h-5 w-5 text-neutral-700 group-hover:fill-red-500 group-hover:text-red-500 transition-all" />
-              </Button>
+              <NavLink to="/wishlist">
+                {({ isActive }) => (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`hidden sm:flex hover:bg-neutral-100 transition-all duration-200 group
+        ${isActive ? "bg-neutral-100" : ""}`}
+                  >
+                    <Heart
+                      className={`h-5 w-5 text-neutral-700 transition-all
+          group-hover:fill-red-500 group-hover:text-red-500
+          ${isActive ? "fill-red-500 text-red-500" : ""}`}
+                    />
+                  </Button>
+                )}
+              </NavLink>
 
               {/* user */}
               <Link to="/signin">
@@ -95,7 +104,7 @@ export default function Navbar() {
                   size="icon"
                   className="relative hover:bg-neutral-100 transition-colors group"
                 >
-              <User2 className="h-5 w-5 text-neutral-700 group-hover:scale-110 transition-transform"/>
+                  <User2 className="h-5 w-5 text-neutral-700 group-hover:scale-110 transition-transform" />
                 </Button>
               </Link>
 
