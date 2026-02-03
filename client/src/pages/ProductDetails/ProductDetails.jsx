@@ -198,7 +198,7 @@ const {addToCart}= useCartStore()
                 <button
                   disabled={!product.inStock}
                   onClick={()=>(addToCart(product))}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 disabled:bg-gray-400"
+                  className="bg-black text-white px-6 py-3 rounded-lg flex items-center gap-2 disabled:bg-gray-400"
                 >
                   <ShoppingCart className="h-5 w-5" />
                   Add to Cart

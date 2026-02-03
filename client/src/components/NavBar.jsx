@@ -4,11 +4,12 @@ import { ShoppingCart, Heart, Search, Menu, X, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useCartStore } from "@/store/useCartStore";
 
 export default function Navbar() {
+  const {cart} = useCartStore()
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [cartCount] = useState(3);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -19,7 +20,7 @@ export default function Navbar() {
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/products", label: "Products" },
-    { to: "/categories", label: "Categories" },
+    { to: "/cart", label: "Cart" },
   ];
 
   return (
@@ -106,9 +107,9 @@ export default function Navbar() {
                   className="relative hover:bg-neutral-100 transition-colors group"
                 >
                   <ShoppingCart className="h-5 w-5 text-neutral-700 group-hover:scale-110 transition-transform" />
-                  {cartCount > 0 && (
+                  {cart.length > 0 && (
                     <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white animate-pulse">
-                      {cartCount}
+                      {cart.length}
                     </span>
                   )}
                 </Button>

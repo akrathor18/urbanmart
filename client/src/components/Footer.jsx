@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Clock, Phone, Mail } from "lucide-react";
 export default function Footer() {
   return (
-    <footer className="bg-gray-950 text-gray-300">
+    <footer className= " w-full bg-gray-950 text-gray-300">
       <div className="max-w-7xl mx-auto px-4 py-14">
 
         {/* Top */}

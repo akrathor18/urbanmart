@@ -13,7 +13,7 @@ function App() {
                 closeOnClick
                 pauseOnHover
                 draggable
-                theme="dark"
+                theme="light"
             />
     <Pages />
     </>
