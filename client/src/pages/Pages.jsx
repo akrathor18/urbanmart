@@ -8,7 +8,6 @@ import Signin from "./Signin/SignIn";
 import SignUp from "./SignUp/SignUp";
 import Account from "./Account/Account";
 import Cart from "./Cart/Cart";
-
 export default function Pages() {
   return (
     <Routes>
