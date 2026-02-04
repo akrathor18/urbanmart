@@ -153,9 +153,11 @@ export default function Cart() {
               <span>₹{total}</span>
             </div>
 
+            <Link to={'/checkout'}>
             <button className="mt-5 w-full rounded-xl bg-black py-3 text-white text-sm">
               Proceed to Checkout
             </button>
+            </Link>
 
             {/* Continue Shopping (secondary) */}
             <Link

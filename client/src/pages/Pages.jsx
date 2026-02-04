@@ -9,6 +9,7 @@ import SignUp from "./SignUp/SignUp";
 import Account from "./Account/Account";
 import Cart from "./Cart/Cart";
 import Wishlist from "./Wishlist/Wishlist";
+import CheckoutPage from "./CheckOut/CheckoutPage";
 export default function Pages() {
   return (
     <Routes>
@@ -21,6 +22,7 @@ export default function Pages() {
         <Route path="/account" element={<Account />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
