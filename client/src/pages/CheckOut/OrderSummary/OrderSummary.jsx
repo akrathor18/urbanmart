@@ -2,7 +2,7 @@ import { useCartStore } from "@/store/useCartStore";
 export default function OrderSummary() {
   const cart = useCartStore((s) => s.cart);
 
-  const subtotal = cart.reduce(
+  const total = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
@@ -35,8 +35,8 @@ export default function OrderSummary() {
       </div>
 
       <div className="border-t pt-4 flex justify-between font-semibold">
-        <span>Subtotal</span>
-        <span>₹ {subtotal}</span>
+        <span>Total</span>
+        <span>₹ {total}</span>
       </div>
     </div>
   );

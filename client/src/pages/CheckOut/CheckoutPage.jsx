@@ -1,18 +1,17 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 import { useCartStore } from "@/store/useCartStore"
 import CheckoutForm from "./CheckoutForm/CheckoutForm.jsx"
 import OrderSummary from "./OrderSummary/OrderSummary.jsx"
 import OrderSuccess from "./OrderSuccess/OrderSuccess.jsx"
-
+import EmptyCart from "../Cart/EmptyCart/EmptyCart.jsx"
 export default function Checkout() {
   const cart = useCartStore((s) => s.cart)
-  const navigate = useNavigate()
   const [orderComplete, setOrderComplete] = useState(false)
 
   if (cart.length === 0 && !orderComplete) {
-    navigate("/products")
-    return null
+    return (
+      <EmptyCart/>
+    )
   }
 
   if (orderComplete) {

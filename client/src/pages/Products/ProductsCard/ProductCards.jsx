@@ -3,6 +3,7 @@ import { Star, Heart, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/useCartStore";
 import { useWishlistStore } from "@/store/useWislistStore";
+import { formatPrice } from "@/utils/formatPrice";
 function ProductCard({ products }) {
   const navigate = useNavigate();
   const inStock = products.inStock;
@@ -86,7 +87,7 @@ function ProductCard({ products }) {
         {/* Price */}
         <div className="mt-1 flex items-center gap-2">
           <span className="text-base font-semibold sm:text-lg">
-            ₹{products.price}
+            {formatPrice(products.price)}
           </span>
 
           {products.originalPrice && (

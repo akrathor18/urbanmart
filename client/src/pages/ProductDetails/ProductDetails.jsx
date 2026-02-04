@@ -11,13 +11,13 @@ import {
   Plus,
   Minus,
 } from "lucide-react";
-
 import ProductCards from "@/pages/Products/ProductsCard/ProductCards.jsx";
 import ErrorState from "@/components/ErrorState";
 import ProductNotFound from "./ProductNotFound/ProductNotFound";
 import { useCartStore } from "@/store/useCartStore";
 import { useProductStore } from "@/store/useProductStore";
 import { useWishlistStore } from "@/store/useWislistStore";
+import { formatPrice } from "@/utils/formatPrice";
 export default function ProductDetail() {
   const { id } = useParams();
 
@@ -150,7 +150,7 @@ export default function ProductDetail() {
 
               {/* Price */}
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-3xl font-bold">{product.price}</span>
+                <span className="text-3xl font-bold">{formatPrice(product.price)}</span>
               </div>
 
               {/* Description */}

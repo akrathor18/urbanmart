@@ -3,6 +3,7 @@ import { Heart, ShoppingCart, X, ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import { useWishlistStore } from "@/store/useWislistStore";
 import { Link } from 'react-router-dom';
+import { formatPrice } from '@/utils/formatPrice';
 
 function WishlistCard({item}) {
     const handleAddToCart = (product) => {
@@ -51,7 +52,7 @@ function WishlistCard({item}) {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
                     <span className="text-lg sm:text-xl font-bold text-gray-900">
-                      ₹{item.price}
+                      {formatPrice(item.price)}
                     </span>
                   </div>
                 </div>
