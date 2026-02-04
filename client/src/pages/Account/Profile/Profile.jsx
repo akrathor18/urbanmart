@@ -1,10 +1,10 @@
 import { Edit } from "lucide-react";
 import React, { useState } from "react";
-import { useOutletContext } from "react-router-dom";
-
+import { useForm } from "react-hook-form";
+import { validationRules } from "@/utils/validation.js";
 function Profile() {
-  const { errors, setErrors, setSuccess } = useOutletContext();
   const [isEditing, setIsEditing] = useState(false);
+
   const [profileData, setProfileData] = useState({
     firstName: "Demo",
     lastName: "User",
@@ -15,18 +15,21 @@ function Profile() {
     state: "",
     zipCode: "",
   });
-  const handleProfileUpdate = async (e) => {
-    e.preventDefault();
-    setErrors({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    mode: "onBlur",
+    defaultValues: profileData,
+  });
+  const onSubmit = (data) => {
+    console.log("SUBMIT DATA:", data);
+  };
 
-    try {
-      await new Promise((r) => setTimeout(r, 800));
-      setIsEditing(false);
-      setSuccess("Profile updated successfully!");
-      setTimeout(() => setSuccess(""), 3000);
-    } catch {
-      setErrors({ profile: "Failed to update profile" });
-    }
+  const onError = (errors) => {
+    console.log("FORM ERRORS:", errors);
   };
 
   return (
@@ -50,127 +53,161 @@ function Profile() {
         </div>
       )}
 
-      <form onSubmit={handleProfileUpdate}>
+      <form method="post" onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               First Name
             </label>
             <input
-              type="text"
-              value={profileData.firstName || ""}
-              onChange={(e) =>
-                setProfileData({ ...profileData, firstName: e.target.value })
-              }
               disabled={!isEditing}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-gray-50 text-sm sm:text-base"
+              type="text"
+              {...register("firstName", validationRules.firstName)}
+              className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:border-blue-500 text-sm sm:text-base ${
+                errors.firstName ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Enter first name"
             />
+            {errors.firstName && (
+              <p className="text-red-500 text-xs sm:text-sm mt-1">
+                {errors.firstName.message}
+              </p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Last Name
             </label>
             <input
-              type="text"
-              value={profileData.lastName || ""}
-              onChange={(e) =>
-                setProfileData({ ...profileData, lastName: e.target.value })
-              }
               disabled={!isEditing}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-gray-50 text-sm sm:text-base"
+              type="text"
+              {...register("lastName", validationRules.lastName)}
+              className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg ${
+                errors.lastName ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Enter last name"
             />
+            {errors.lastName && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.lastName.message}
+              </p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email
             </label>
+
             <input
               type="email"
-              value={profileData.email || ""}
-              onChange={(e) =>
-                setProfileData({ ...profileData, email: e.target.value })
-              }
               disabled={!isEditing}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-gray-50 text-sm sm:text-base"
+              {...register("email", validationRules.email)}
+              className={`w-full px-4 py-3 border rounded-lg
+      ${errors.email ? "border-red-500" : "border-gray-300"}
+    `}
             />
+
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.email.message}
+              </p>
+            )}
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Phone
             </label>
+
             <input
               type="tel"
-              value={profileData.phone || ""}
-              onChange={(e) =>
-                setProfileData({ ...profileData, phone: e.target.value })
-              }
               disabled={!isEditing}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-gray-50 text-sm sm:text-base"
+              {...register("phone", validationRules.phone)}
+              className={`w-full px-4 py-3 border rounded-lg
+      ${errors.phone ? "border-red-500" : "border-gray-300"}
+    `}
             />
+
+            {errors.phone && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.phone.message}
+              </p>
+            )}
           </div>
+
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Address
             </label>
+
             <input
               type="text"
-              value={profileData.address || ""}
-              onChange={(e) =>
-                setProfileData({ ...profileData, address: e.target.value })
-              }
               disabled={!isEditing}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-gray-50 text-sm sm:text-base"
+              {...register("address", validationRules.address)}
+              className={`w-full px-4 py-3 border rounded-lg
+      ${errors.address ? "border-red-500" : "border-gray-300"}
+    `}
             />
+
+            {errors.address && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.address.message}
+              </p>
+            )}
           </div>
+
+          {/* City */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              City
-            </label>
+            <label className="block text-sm font-medium mb-2">City</label>
             <input
-              type="text"
-              value={profileData.city || ""}
-              onChange={(e) =>
-                setProfileData({ ...profileData, city: e.target.value })
-              }
               disabled={!isEditing}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-gray-50 text-sm sm:text-base"
+              {...register("city", validationRules.city)}
+              className={`w-full px-4 py-3 border rounded-lg ${
+                errors.city ? "border-red-500" : "border-gray-300"
+              }`}
             />
+            {errors.city && (
+              <p className="text-sm text-red-600 mt-1">{errors.city.message}</p>
+            )}
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              State
-            </label>
+            <label className="block text-sm font-medium mb-2">State</label>
             <input
-              type="text"
-              value={profileData.state || ""}
-              onChange={(e) =>
-                setProfileData({ ...profileData, state: e.target.value })
-              }
               disabled={!isEditing}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-gray-50 text-sm sm:text-base"
+              {...register("state", validationRules.state)}
+              className={`w-full px-4 py-3 border rounded-lg ${
+                errors.state ? "border-red-500" : "border-gray-300"
+              }`}
             />
+            {errors.state && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.state.message}
+              </p>
+            )}
           </div>
+          {/* PIN Code */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              PIN Code
-            </label>
+            <label className="block text-sm font-medium mb-2">PIN Code</label>
             <input
-              type="text"
-              value={profileData.zipCode || ""}
-              onChange={(e) =>
-                setProfileData({ ...profileData, zipCode: e.target.value })
-              }
               disabled={!isEditing}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-gray-50 text-sm sm:text-base"
+              {...register("zipCode", validationRules.zipCode)}
+              className={`w-full px-4 py-3 border rounded-lg ${
+                errors.zipCode ? "border-red-500" : "border-gray-300"
+              }`}
             />
+            {errors.zipCode && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.zipCode.message}
+              </p>
+            )}
           </div>
         </div>
-
         {isEditing && (
           <div className="mt-6">
             <button
               type="submit"
-              className="bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-sm sm:text-base"
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700"
             >
               Save Changes
             </button>

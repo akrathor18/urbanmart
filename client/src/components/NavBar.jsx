@@ -7,10 +7,9 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
-
 export default function Navbar() {
   const { cart } = useCartStore();
-  const {status}=useAuthStore()
+  const { status } = useAuthStore();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -101,15 +100,19 @@ export default function Navbar() {
               </NavLink>
 
               {/* user */}
-              <Link to={`${status === "authenticated"?'/account':'/signin'}`}>
-                <Button
+              <NavLink
+                to={`${status === "authenticated" ? "/account" : "/signin"}`}
+              >
+                {({isActive})=>(
+                  <Button
                   variant="ghost"
                   size="icon"
-                  className="relative hover:bg-neutral-100 transition-colors group"
+                  className={`relative hover:bg-neutral-100 transition-colors group ${isActive?'bg-neutral-100':''}`}
                 >
                   <User2 className="h-5 w-5 text-neutral-700 group-hover:scale-110 transition-transform" />
                 </Button>
-              </Link>
+                )}
+              </NavLink>
 
               {/* Cart */}
               <Link to="/cart">

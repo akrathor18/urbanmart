@@ -14,7 +14,6 @@ export default function Account() {
   const [errors, setErrors] = useState({});
 
   const {user}= useAuthStore()
-  console.log(user)
   if (!MOCK_USER) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -39,8 +38,6 @@ export default function Account() {
       </div>
     );
   }
-
-  /* ---------------- MAIN UI ---------------- */
   return (
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="max-w-7xl mx-auto px-4">
@@ -61,20 +58,5 @@ export default function Account() {
         </div>
       </div>
     </div>
-  );
-}
-
-/* ---------------- SIDEBAR BUTTON ---------------- */
-function SidebarBtn({ active, onClick, icon, label }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`w-full flex items-center px-4 py-3 rounded-lg ${
-        active ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"
-      }`}
-    >
-      <span className="mr-3">{icon}</span>
-      {label}
-    </button>
   );
 }
