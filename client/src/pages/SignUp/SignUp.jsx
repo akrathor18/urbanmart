@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
   User,
@@ -9,27 +9,29 @@ import {
   Eye,
   EyeOff,
   ArrowLeft,
-  CheckCircle,
 } from "lucide-react";
 import { validationRules } from "@/utils/validation.js";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Signup() {
-    const {signUp} = useAuthStore()
+  const { signUp, isSigning, status } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/account";
 
-  const [isLoading, setIsLoading] = useState(false);
+useEffect(() => {
+    if (status === "authenticated") {
+      navigate("/account", { replace: true });
+    }
+  }, [status, navigate]);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isValid },
-    setError,
-    clearErrors,
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -47,29 +49,11 @@ export default function Signup() {
 
   /* ---------------- SUBMIT ---------------- */
   const onSubmit = async (data) => {
-   console.log(data)
-   signUp(data)
+    const success = signUp(data);
+    if (success) {
+      navigate(from, { replace: true });
+    }
   };
-
-  /* ---------------- SUCCESS SCREEN ---------------- */
-  if (success) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white rounded-xl shadow-sm p-8 max-w-md w-full text-center">
-          <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="h-8 w-8 text-green-600" />
-          </div>
-          <h1 className="text-2xl font-bold mb-3">
-            Account Created Successfully!
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Your account has been created. Redirecting to sign in…
-          </p>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">
@@ -200,10 +184,10 @@ export default function Signup() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={!isValid || isLoading}
+              disabled={!isValid || isSigning}
               className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold disabled:bg-blue-400"
             >
-              {isLoading ? "Creating Account..." : "Create Account"}
+              {isSigning ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 

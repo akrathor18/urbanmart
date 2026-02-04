@@ -4,6 +4,7 @@ import Pages from "./pages/Pages.jsx";
 import { ToastContainer } from 'react-toastify';
 
 function App() {
+
   return (
     <>
      <ToastContainer
@@ -15,6 +16,8 @@ function App() {
                 draggable
                 theme="light"
             />
+
+            
     <Pages />
     </>
   );

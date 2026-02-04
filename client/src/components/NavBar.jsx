@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCartStore } from "@/store/useCartStore";
+import { useAuthStore } from "@/store/useAuthStore";
+
 
 export default function Navbar() {
   const { cart } = useCartStore();
+  const {status}=useAuthStore()
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -98,7 +101,7 @@ export default function Navbar() {
               </NavLink>
 
               {/* user */}
-              <Link to="/signin">
+              <Link to={`${status === "authenticated"?'/account':'/signin'}`}>
                 <Button
                   variant="ghost"
                   size="icon"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { User, Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
@@ -11,22 +11,21 @@ const DEMO_CREDENTIALS = {
 };
 
 export default function Signin() {
-    const {signIn, isSigning} = useAuthStore()
+   const { signIn, isSigning, status } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const from = location.state?.from?.pathname || "/";
+useEffect(() => {
+    if (status === "authenticated") {
+      navigate("/account", { replace: true });
+    }
+  }, [status, navigate]);
+  const from = location.state?.from?.pathname || "/account";
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    setError,
-    clearErrors,
-    setValue,
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -36,21 +35,22 @@ export default function Signin() {
   });
 
   /* ---------------- NORMAL LOGIN ---------------- */
-  const onSubmit = async (data) => {
-    try {
-        signIn(data)
-     
-    } catch (err) {
-      setError("root", { message: err.message });
-    } finally {
-      setIsLoading(false);
+   const onSubmit = async (data) => {
+    const success = await signIn(data);
+    if (success) {
+      navigate(from, { replace: true });
     }
   };
 
-  /* ---------------- DEMO LOGIN ---------------- */
-  const handleDemoLogin = async () => {
-    setValue("email", DEMO_CREDENTIALS.email);
-    setValue("password", DEMO_CREDENTIALS.password);
+   const handleDemoLogin = async () => {
+    const success = await signIn({
+      email: DEMO_CREDENTIALS.email,
+      password: DEMO_CREDENTIALS.password,
+    });
+
+    if (success) {
+      navigate(from, { replace: true });
+    }
   };
 
   return (
@@ -75,7 +75,7 @@ export default function Signin() {
           {/* Demo Login */}
           <button
             onClick={handleDemoLogin}
-            disabled={isLoading}
+            disabled={isSigning}
             className="w-full mb-6 p-3 border border-blue-200 rounded-lg bg-blue-50 hover:bg-blue-100 transition text-left"
           >
                         <p className="text-xs sm:text-sm text-blue-800 font-medium mb-2">Quick Demo Login:</p>
@@ -141,10 +141,10 @@ export default function Signin() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={!isValid || isLoading}
+              disabled={!isValid || isSigning}
               className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold disabled:bg-blue-400"
             >
-              {isLoading ? "Signing in..." : "Sign In"}
+              {isSigning ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
