@@ -38,7 +38,6 @@ useEffect(() => {
       firstName: "",
       lastName: "",
       email: "",
-      phone: "",
       password: "",
       confirmPassword: "",
       agreeToTerms: false,
@@ -121,21 +120,6 @@ useEffect(() => {
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
             </div>
-
-            {/* Phone */}
-            <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="tel"
-                placeholder="Phone"
-                {...register("phone", validationRules.phone)}
-                className="w-full pl-10 pr-4 py-2 border rounded-lg"
-              />
-              {errors.phone && (
-                <p className="text-red-500 text-sm">{errors.phone.message}</p>
-              )}
-            </div>
-
             {/* Password */}
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
