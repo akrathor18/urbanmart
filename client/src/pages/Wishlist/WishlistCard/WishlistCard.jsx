@@ -1,7 +1,7 @@
 import React from 'react'
 import { Heart, ShoppingCart, X, ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
-import { useWishlistStore } from "@/store/useWislistStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 import { Link } from 'react-router-dom';
 import { formatPrice } from '@/utils/formatPrice';
 

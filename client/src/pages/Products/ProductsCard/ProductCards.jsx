@@ -2,7 +2,7 @@ import React from "react";
 import { Star, Heart, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/useCartStore";
-import { useWishlistStore } from "@/store/useWislistStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 import { formatPrice } from "@/utils/formatPrice";
 function ProductCard({ products }) {
   const navigate = useNavigate();

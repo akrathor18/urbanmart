@@ -16,7 +16,7 @@ import ErrorState from "@/components/ErrorState";
 import ProductNotFound from "./ProductNotFound/ProductNotFound";
 import { useCartStore } from "@/store/useCartStore";
 import { useProductStore } from "@/store/useProductStore";
-import { useWishlistStore } from "@/store/useWislistStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 import { formatPrice } from "@/utils/formatPrice";
 export default function ProductDetail() {
   const { id } = useParams();

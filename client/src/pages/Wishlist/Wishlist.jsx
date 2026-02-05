@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useWishlistStore } from "@/store/useWislistStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 import { useCartStore } from "@/store/useCartStore";
 import EmptyWishlist from "./EmptyWishlist/EmptyWishlist";
 import WishlistCard from "./WishlistCard/WishlistCard";

@@ -1,7 +1,7 @@
 import React from "react";
 import { X, Plus, Minus, Heart } from "lucide-react";
 
-import { useWishlistStore } from "@/store/useWislistStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 import { Link } from "react-router-dom";
 
 function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPrice }) {
