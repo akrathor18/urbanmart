@@ -20,6 +20,7 @@ function Profile() {
     handleSubmit,
     formState: { errors },
     reset,
+    clearErrors,
   } = useForm({
     mode: "onBlur",
     defaultValues: profileData,
@@ -32,6 +33,13 @@ function Profile() {
     console.log("FORM ERRORS:", errors);
   };
 
+  const handleCancel = () => {
+  reset(profileData);
+  clearErrors();
+  setIsEditing(!isEditing);
+};
+
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -39,7 +47,7 @@ function Profile() {
           Profile Information
         </h1>
         <button
-          onClick={() => setIsEditing(!isEditing)}
+          onClick={() => handleCancel()}
           className="flex items-center text-blue-600 hover:text-blue-700 text-sm sm:text-base"
         >
           <Edit className="h-4 w-4 mr-2" />

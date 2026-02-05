@@ -6,7 +6,7 @@ import { validationRules } from "@/utils/validation.js";
 import { useAuthStore } from "@/store/useAuthStore";
 /* ---------------- DEMO CREDENTIALS ---------------- */
 const DEMO_CREDENTIALS = {
-  email: "demo@UrbanMart.com",
+  email: "demo@example.com",
   password: "demo123",
 };
 
