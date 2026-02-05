@@ -15,6 +15,7 @@ model User {
   email    String    @unique
   password String
   role     Role      @default(USER)
+  phone String?
   cart     Cart?
   wishlist Wishlist?
   orders   Order[]
@@ -42,6 +43,8 @@ model Address {
   isDefault Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, isDefault])
+
 }
 
 
@@ -96,10 +99,12 @@ model Order {
   status    STATUS   @default(PENDING)
   createdAt DateTime @default(now())
 
-  user    User
+  user    User    @relation(fields: [userId], references: [id])
   items   OrderItem[]
   address OrderAddress?
 }
+
+
 model OrderAddress {
   id        Int    @id @default(autoincrement())
   orderId   Int    @unique
