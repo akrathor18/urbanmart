@@ -2,11 +2,11 @@ import { login, register, checkAuth, logout } from "../controllers/auth.controll
 
 import { Router } from "express";
 import verifyJWT from "../middlewares/verifyJWT.js";
-const routes = new Router();
+const router = new Router();
 
-routes.post("/register", register);
-routes.post("/login", login);
-routes.get("/me", verifyJWT, checkAuth);
-routes.post("/logout", logout);
+router.post("/register", register);
+router.post("/login", login);
+router.get("/me", verifyJWT, checkAuth);
+router.post("/logout", logout);
 
-export default routes;
+export default router;

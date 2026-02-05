@@ -1,0 +1,25 @@
+import * as profileService from "../services/profile.service.js";
+
+export const getProfile = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+    console.log(userId)
+    const userProflie = await profileService.getProfile(userId);
+    console.log(userProflie)
+    res.status(201).json({message:'user found', user: userProflie});
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateProfile=async (req, res)=>{
+    try {
+         const userId = req.user.id
+  const data = req.body
+   const result = await profileService.updateProfile(userId, data)
+   res.status(200).json('Profile updated successfully', result)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: error.message})
+    }
+}
