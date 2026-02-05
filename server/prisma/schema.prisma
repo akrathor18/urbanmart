@@ -18,12 +18,32 @@ model User {
   cart     Cart?
   wishlist Wishlist?
   orders   Order[]
+  addresses Address[]
 }
 
 enum Role {
   USER
   ADMIN
 }
+
+model Address {
+  id        Int    @id @default(autoincrement())
+  userId    Int
+
+  fullName  String
+  phone     String
+  line1     String
+  line2     String?
+  city      String
+  state     String
+  pincode   String
+  country   String
+
+  isDefault Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 
 // cart model with cart items
 model Cart {
@@ -73,13 +93,29 @@ model Order {
   id        Int      @id @default(autoincrement())
   userId    Int
   total     Float
-  address   String
   status    STATUS   @default(PENDING)
   createdAt DateTime @default(now())
 
-  user  User        @relation(fields: [userId], references: [id])
-  items OrderItem[]
+  user    User
+  items   OrderItem[]
+  address OrderAddress?
 }
+model OrderAddress {
+  id        Int    @id @default(autoincrement())
+  orderId   Int    @unique
+
+  fullName  String
+  phone     String
+  line1     String
+  line2     String?
+  city      String
+  state     String
+  pincode   String
+  country   String
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
 
 model OrderItem {
   id        Int   @id @default(autoincrement())
