@@ -21,7 +21,6 @@ export const useUserStore = create((set) => ({
   updateProfile: async (data) => {
     set({ isupdating: true });
      const cleanData = deepSanitizePayload(data);
-    console.log(cleanData);
     const promise = api.put("/user/", cleanData );
     toast.promise(promise, {
       pending: "Updating Profile",
@@ -35,7 +34,6 @@ export const useUserStore = create((set) => ({
 
     try {
       const response = await promise;
-      console.log(response);
       set({ user: response.profile });
 
       set({ isupdating: false });

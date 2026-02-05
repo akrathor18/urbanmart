@@ -60,7 +60,10 @@ function Profile() {
 
   const onSubmit = (data) => {
     const formdata = mapFormToProfilePayload(data);
-    updateProfile(formdata)
+   const success=  updateProfile(formdata);
+   if(success){
+    setIsEditing(false)
+   }
   };
 
   const onError = (errors) => {

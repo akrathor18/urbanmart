@@ -79,24 +79,35 @@ export const updateProfile = async (userId, data) => {
       });
     }
 
-    return tx.user.findUnique({
-      where: { id: userId },
+    const updatedUser = await tx.user.findUnique({
+  where: { id: userId },
+  select: {
+    id: true,
+    firstName: true,
+    lastName: true,
+    email: true,
+    phone: true,
+    addresses: {
+      where: { isDefault: true },
       select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
+        fullName: true,
         phone: true,
-        addresses: {
-          where: { isDefault: true },
-          select: {
-            line1: true,
-            city: true,
-            state: true,
-            pincode: true,
-          },
-        },
+        line1: true,
+        line2: true,
+        city: true,
+        state: true,
+        pincode: true,
+        country: true,
       },
-    });
+    },
+  },
+});
+
+return {
+  ...updatedUser,
+  address: updatedUser.addresses[0] || null,
+  addresses: undefined,
+};
+
   });
 };

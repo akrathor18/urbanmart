@@ -1,18 +1,28 @@
-export const deepSanitizePayload = (obj) => {
-  if (obj === null || obj === undefined) return obj;
-
-  if (Array.isArray(obj)) {
-    return obj.map(deepSanitizePayload);
+export const deepSanitizePayload = (value) => {
+  // convert empty or null to undefined
+  if (value === "" || value === null) {
+    return undefined;
   }
 
-  if (typeof obj === "object") {
-    return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => {
-        if (value === "" || value === null) return [key, null];
-        return [key, deepSanitizePayload(undefined)];
-      })
-    );
+  // handle arrays
+  if (Array.isArray(value)) {
+    return value.map(deepSanitizePayload);
   }
 
-  return obj;
+  // handle objects
+  if (typeof value === "object" && value !== undefined) {
+    const result = {};
+
+    for (const key in value) {
+      const sanitized = deepSanitizePayload(value[key]);
+
+      // 👇 KEEP the key, just change the value
+      result[key] = sanitized;
+    }
+
+    return result;
+  }
+
+  // primitives (string, number, boolean)
+  return value;
 };
