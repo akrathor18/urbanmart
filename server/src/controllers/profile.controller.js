@@ -16,9 +16,12 @@ export const updateProfile=async (req, res)=>{
     try {
          const userId = req.user.id
   const data = req.body
+  console.log("playload",req.body)
    const result = await profileService.updateProfile(userId, data)
-   res.status(200).json('Profile updated successfully', result)
+   res.status(200).json({massage:'Profile updated successfully', profile: result})
     } catch (error) {
+  console.log("playload",req.body)
+
         console.log(error)
         res.status(500).json({message: error.message})
     }

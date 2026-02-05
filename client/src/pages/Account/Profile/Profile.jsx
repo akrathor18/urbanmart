@@ -1,32 +1,66 @@
 import { Edit } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { validationRules } from "@/utils/validation.js";
+import { useUserStore } from "@/store/useUserStore";
+
 function Profile() {
+  const { getProfile, user, loading, updateProfile, isupdating } =
+    useUserStore();
   const [isEditing, setIsEditing] = useState(false);
 
-  const [profileData, setProfileData] = useState({
-    firstName: "Demo",
-    lastName: "User",
-    email: "demo@shophub.com",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
+  const mapUserToForm = (user) => ({
+    firstName: user.firstName || "",
+    lastName: user.lastName || "",
+    email: user.email || "",
+    phone: user.phone || "",
+    address: user.address?.line1 || "",
+    city: user.address?.city || "",
+    state: user.address?.state || "",
+    zipCode: user.address?.pincode || "",
   });
+
+  const mapFormToProfilePayload = (data) => ({
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    phone: data.phone,
+    address: {
+      fullName: `${data.firstName} ${data.lastName}`,
+      phone: data.phone,
+      line1: data.address,
+      city: data.city,
+      state: data.state,
+      pincode: data.zipCode,
+    },
+  });
+
+  const form = useForm({ mode: "onBlur" });
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
     clearErrors,
-  } = useForm({
-    mode: "onBlur",
-    defaultValues: profileData,
-  });
+    formState: { errors },
+  } = form;
+
+  useEffect(() => {
+    getProfile();
+  }, [getProfile]);
+
+  useEffect(() => {
+    if (user) {
+      reset(mapUserToForm(user));
+    }
+  }, [user, reset]);
+
+  if (!user || loading) {
+    return <div>loading</div>;
+  }
+
   const onSubmit = (data) => {
-    console.log("SUBMIT DATA:", data);
+    const formdata = mapFormToProfilePayload(data);
+    updateProfile(formdata)
   };
 
   const onError = (errors) => {
@@ -34,11 +68,10 @@ function Profile() {
   };
 
   const handleCancel = () => {
-  reset(profileData);
-  clearErrors();
-  setIsEditing(!isEditing);
-};
-
+    reset(mapUserToForm(user));
+    clearErrors();
+    setIsEditing(!isEditing);
+  };
 
   return (
     <div>
@@ -214,6 +247,7 @@ function Profile() {
         {isEditing && (
           <div className="mt-6">
             <button
+            disabled={isupdating}
               type="submit"
               className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700"
             >

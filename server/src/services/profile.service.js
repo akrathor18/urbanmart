@@ -35,7 +35,6 @@ export const getProfile = async (userId) => {
 
 export const updateProfile = async (userId, data) => {
   const { firstName, lastName, email, phone, address } = data;
-
   return prisma.$transaction(async (tx) => {
     await tx.user.update({
       where: { id: userId },
@@ -79,5 +78,25 @@ export const updateProfile = async (userId, data) => {
         },
       });
     }
+
+    return tx.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        addresses: {
+          where: { isDefault: true },
+          select: {
+            line1: true,
+            city: true,
+            state: true,
+            pincode: true,
+          },
+        },
+      },
+    });
   });
 };

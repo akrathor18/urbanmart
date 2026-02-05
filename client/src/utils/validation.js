@@ -1,7 +1,7 @@
 // Validation schemas and helper functions
 export const validationRules = {
   email: {
-   
+   required: "Email is required",
     pattern: {
       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
       message: "Please enter a valid email address",
@@ -19,6 +19,7 @@ export const validationRules = {
     validate: (value) => value === password || "Passwords do not match",
   }),
   firstName: {
+    required: "First name is required",
     minLength: {
       value: 2,
       message: "First name must be at least 2 characters",
@@ -29,7 +30,7 @@ export const validationRules = {
     },
   },
   lastName: {
-   
+   required: "Last name is required",
     minLength: {
       value: 2,
       message: "Last name must be at least 2 characters",
