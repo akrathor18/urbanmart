@@ -13,7 +13,10 @@ export default function ShippingInfo({ register, errors }) {
           </label>
           <input
             type="text"
-            {...register("firstName", validationRules.firstName)}
+            {...register("firstName", {
+              required: "First name is required",
+              ...validationRules.firstName,
+            })}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:border-blue-500 text-sm sm:text-base ${
               errors.firstName ? "border-red-500" : "border-gray-300"
             }`}
@@ -31,7 +34,10 @@ export default function ShippingInfo({ register, errors }) {
           </label>
           <input
             type="text"
-            {...register("lastName", validationRules.lastName)}
+            {...register("lastName", {
+              required: "Last name is required",
+              ...validationRules.lastName,
+            })}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:border-blue-500 text-sm sm:text-base ${
               errors.lastName ? "border-red-500" : "border-gray-300"
             }`}
@@ -49,7 +55,10 @@ export default function ShippingInfo({ register, errors }) {
           </label>
           <input
             type="email"
-            {...register("email", validationRules.email)}
+            {...register("email", {
+              required: "Email is required",
+              ...validationRules.email,
+            })}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:border-blue-500 text-sm sm:text-base ${
               errors.email ? "border-red-500" : "border-gray-300"
             }`}
@@ -67,7 +76,10 @@ export default function ShippingInfo({ register, errors }) {
           </label>
           <input
             type="tel"
-            {...register("phone", validationRules.phone)}
+            {...register("phone", {
+              required: "Phone number is required",
+              ...validationRules.phone,
+            })}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:border-blue-500 text-sm sm:text-base ${
               errors.phone ? "border-red-500" : "border-gray-300"
             }`}
@@ -86,7 +98,10 @@ export default function ShippingInfo({ register, errors }) {
           </label>
           <input
             type="text"
-            {...register("address", validationRules.address)}
+            {...register("address", {
+              required: "Address is required",
+              ...validationRules.address,
+            })}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:border-blue-500 text-sm sm:text-base ${
               errors.address ? "border-red-500" : "border-gray-300"
             }`}
@@ -104,7 +119,10 @@ export default function ShippingInfo({ register, errors }) {
           </label>
           <input
             type="text"
-            {...register("city", validationRules.city)}
+            {...register("city", {
+              required: "City is required",
+              ...validationRules.city,
+            })}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:border-blue-500 text-sm sm:text-base ${
               errors.city ? "border-red-500" : "border-gray-300"
             }`}
@@ -122,7 +140,10 @@ export default function ShippingInfo({ register, errors }) {
           </label>
           <input
             type="text"
-            {...register("state", validationRules.state)}
+            {...register("state", {
+              required: "State is required",
+              ...validationRules.state,
+            })}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:border-blue-500 text-sm sm:text-base ${
               errors.state ? "border-red-500" : "border-gray-300"
             }`}
@@ -140,7 +161,10 @@ export default function ShippingInfo({ register, errors }) {
           </label>
           <input
             type="text"
-            {...register("zipCode", validationRules.zipCode)}
+            {...register("zipCode", {
+              required: "PIN code is required",
+              ...validationRules.zipCode,
+            })}
             className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:border-blue-500 text-sm sm:text-base ${
               errors.zipCode ? "border-red-500" : "border-gray-300"
             }`}
