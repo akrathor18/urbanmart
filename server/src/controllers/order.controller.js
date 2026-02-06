@@ -13,7 +13,8 @@ export const orderProductController = async (req, res) => {
 
     res.status(201).json(order);
   } catch (error) {
-    res.status(400).json({ message: error });
+    console.log(error)
+    res.status(400).json({ message: error.message });
   }
 };
 

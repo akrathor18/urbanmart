@@ -9,7 +9,7 @@ export const createProduct = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message || "Internal Server Error" });
+    res.status(500).json({ message: error || "Internal Server Error" });
   }
 };
 
@@ -48,6 +48,6 @@ export const getProductsById = async (req, res) => {
     res.status(200).json(product)
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message || "Internal Server Error" });
+    res.status(500).json({ message: error || "Internal Server Error" });
   }
 };

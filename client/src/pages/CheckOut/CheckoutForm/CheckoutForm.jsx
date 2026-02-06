@@ -4,7 +4,7 @@ import ShippingInfo from "../ShippingInfo/ShippingInfo.jsx";
 import ShippingMethod from "../ShippingMethod/ShippingMethod.jsx";
 import PaymentMethod from "../PaymentMethod/PaymentMethod.jsx";
 import CardInfo from "../CardInfo/CardInfo.jsx";
-
+import { mapFormToOrderPayload } from "@/utils/mapPlayload.js";
 export default function CheckoutForm({ onOrderComplete }) {
   const cart = useCartStore((s) => s.cart);
   const clearCart = useCartStore((s) => s.clearCart);
@@ -37,13 +37,20 @@ export default function CheckoutForm({ onOrderComplete }) {
   const tax = Math.round(subtotal * 0.18);
   const total = subtotal + shipping + tax;
 
-  const onSubmit = async () => {
-    // later → API call here
-    await new Promise((r) => setTimeout(r, 1200));
+  const onSubmit = async (data) => {
+  const payload = mapFormToOrderPayload({
+    data,
+    productId: cart[0].id,
+    quantity: cart[0].quantity,
+  });
 
-    clearCart();
-    onOrderComplete();
-  };
+  console.log("FINAL PAYLOAD →", payload);
+
+  // await placeOrder(payload)
+  // clearCart()
+  // onOrderComplete()
+};
+
 
   return (
     <form
