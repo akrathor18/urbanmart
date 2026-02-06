@@ -10,8 +10,10 @@ import { useAuthStore } from "@/store/useAuthStore";
 export default function Navbar() {
   const { cart } = useCartStore();
   const { status } = useAuthStore();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -27,6 +29,7 @@ export default function Navbar() {
 
   return (
     <>
+      {/* HEADER */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ${
           isScrolled
@@ -36,107 +39,15 @@ export default function Navbar() {
         style={{ fontFamily: "'Archivo', sans-serif" }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Logo */}
-            <Link
-              to="/"
-              className="text-2xl lg:text-3xl font-black tracking-tight uppercase transition-all duration-200 hover:scale-105"
-              style={{ fontFamily: "'Bebas Neue', sans-serif" }}
-            >
-              Urban
-              <span className="text-blue-600 relative">
-                Mart
-                <span className="absolute -bottom-0.5 left-0 w-full h-0.5 bg-blue-600"></span>
-              </span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1 text-sm font-semibold uppercase tracking-wider">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={({ isActive }) =>
-                    `px-4 py-2 rounded-sm transition-all duration-200 ${
-                      isActive
-                        ? "bg-neutral-900 text-white"
-                        : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900"
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-            </nav>
-
-            {/* Actions */}
-            <div className="flex items-center gap-2">
-              {/* Search Toggle (Desktop) */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="hidden md:flex hover:bg-neutral-100 transition-colors"
-              >
-                <Search className="h-5 w-5 text-neutral-700" />
-              </Button>
-
-              {/* Wishlist */}
-              <NavLink to="/wishlist">
-                {({ isActive }) => (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={`hidden sm:flex hover:bg-neutral-100 transition-all duration-200 group
-        ${isActive ? "bg-neutral-100" : ""}`}
-                  >
-                    <Heart
-                      className={`h-5 w-5 text-neutral-700 transition-all
-          group-hover:fill-red-500 group-hover:text-red-500
-          ${isActive ? "fill-red-500 text-red-500" : ""}`}
-                    />
-                  </Button>
-                )}
-              </NavLink>
-
-              {/* user */}
-              <NavLink
-                to={`${status === "authenticated" ? "/account" : "/signin"}`}
-              >
-                {({isActive})=>(
-                  <Button
-                  variant="ghost"
-                  size="icon"
-                  className={`relative hover:bg-neutral-100 transition-colors group ${isActive?'bg-neutral-100':''}`}
-                >
-                  <User2 className="h-5 w-5 text-neutral-700 group-hover:scale-110 transition-transform" />
-                </Button>
-                )}
-              </NavLink>
-
-              {/* Cart */}
-              <Link to="/cart">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative hover:bg-neutral-100 transition-colors group"
-                >
-                  <ShoppingCart className="h-5 w-5 text-neutral-700 group-hover:scale-110 transition-transform" />
-                  {cart.length > 0 && (
-                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white animate-pulse">
-                      {cart.length}
-                    </span>
-                  )}
-                </Button>
-              </Link>
-
-              {/* Mobile Menu */}
-              <Sheet>
+          <div className="flex items-center h-16 lg:h-20">
+            {/* LEFT: MOBILE MENU */}
+            <div className="lg:hidden">
+              <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
                 <SheetTrigger asChild>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="lg:hidden hover:bg-neutral-100"
+                    onClick={() => setMobileOpen(true)}
                   >
                     <Menu className="h-6 w-6 text-neutral-700" />
                   </Button>
@@ -149,81 +60,176 @@ export default function Navbar() {
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
                       <Input
                         placeholder="Search products..."
-                        className="pl-10 h-11 bg-neutral-50 border-neutral-200"
+                        className="pl-10 h-11"
                       />
                     </div>
                   </div>
 
-                  {/* Mobile Nav Links */}
-                  <nav className="flex flex-col gap-2 mb-6">
+                  {/* Mobile Nav */}
+                  <nav className="flex flex-col gap-2">
                     {navLinks.map((link) => (
                       <NavLink
                         key={link.to}
                         to={link.to}
+                        onClick={() => setMobileOpen(false)}
                         className={({ isActive }) =>
-                          `flex items-center gap-3 px-4 py-3 rounded-md text-sm font-semibold uppercase tracking-wide transition-all ${
+                          `px-4 py-3 rounded-md text-sm font-semibold uppercase tracking-wide transition ${
                             isActive
                               ? "bg-neutral-900 text-white"
                               : "text-neutral-700 hover:bg-neutral-100"
                           }`
                         }
                       >
-                        {link.icon}
                         {link.label}
                       </NavLink>
                     ))}
-                  </nav>
 
-                  {/* CTA */}
-                  <div className="pt-6 border-t border-neutral-200">
-                    <Button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase tracking-wider">
-                      Sign In
-                    </Button>
-                  </div>
+                    <NavLink
+                      to="/wishlist"
+                      onClick={() => setMobileOpen(false)}
+                      className="px-4 py-3 rounded-md text-sm font-semibold uppercase text-neutral-700 hover:bg-neutral-100"
+                    >
+                      Wishlist
+                    </NavLink>
+
+                    <NavLink
+                      to={status === "authenticated" ? "/account" : "/signin"}
+                      onClick={() => setMobileOpen(false)}
+                      className="px-4 py-3 rounded-md text-sm font-semibold uppercase text-neutral-700 hover:bg-neutral-100"
+                    >
+                      My Account
+                    </NavLink>
+                  </nav>
                 </SheetContent>
               </Sheet>
             </div>
+
+            {/* LOGO */}
+            <Link
+              to="/"
+              className="text-2xl lg:text-3xl font-black uppercase tracking-tight lg:mr-10"
+              style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+            >
+              Urban
+              <span className="text-blue-600 relative">
+                Mart
+                <span className="absolute -bottom-0.5 left-0 w-full h-0.5 bg-blue-600" />
+              </span>
+            </Link>
+
+            {/* DESKTOP NAV */}
+            <nav className="hidden lg:flex flex-1 justify-center gap-6 text-sm font-semibold uppercase tracking-wider">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={({ isActive }) =>
+                    `pb-1 transition ${
+                      isActive
+                        ? "border-b-2 border-neutral-900 text-neutral-900"
+                        : "text-neutral-600 hover:text-neutral-900"
+                    }`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
+
+            {/* ACTIONS */}
+            <div className="ml-auto flex items-center gap-3">
+              {/* Search (desktop) */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="hidden md:flex"
+              >
+                <Search className="h-5 w-5" />
+              </Button>
+
+              {/* Wishlist */}
+              <NavLink to="/wishlist" className="hidden lg:block">
+                {({ isActive }) => (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={isActive ? "bg-neutral-100" : ""}
+                  >
+                    <Heart
+                      className={`h-5 w-5 ${
+                        isActive
+                          ? "fill-red-500 text-red-500"
+                          : "text-neutral-700"
+                      }`}
+                    />
+                  </Button>
+                )}
+              </NavLink>
+
+              {/* User */}
+              <NavLink
+                to={status === "authenticated" ? "/account" : "/signin"}
+                className="hidden lg:block"
+              >
+                {({ isActive }) => (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={isActive ? "bg-neutral-100" : ""}
+                  >
+                    <User2 className="h-5 w-5 text-neutral-700" />
+                  </Button>
+                )}
+              </NavLink>
+
+              {/* Cart */}
+              <NavLink to="/cart">
+                {({ isActive }) => (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`relative ${isActive ? "bg-neutral-100" : ""}`}
+                  >
+                    <ShoppingCart className="h-5 w-5 text-neutral-700" />
+                    {cart.length > 0 && (
+                      <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+                        {cart.length}
+                      </span>
+                    )}
+                  </Button>
+                )}
+              </NavLink>
+            </div>
           </div>
 
-          {/* Desktop Search Bar (Expandable) */}
+          {/* DESKTOP SEARCH BAR */}
           <div
-            className={`hidden md:block overflow-hidden transition-all duration-300 ease-out ${
+            className={`hidden md:block overflow-hidden transition-all duration-300 ${
               isSearchOpen ? "max-h-20 pb-4 opacity-100" : "max-h-0 opacity-0"
             }`}
           >
             <div className="relative max-w-2xl mx-auto">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
               <Input
-                placeholder="Search for products, brands, categories..."
-                className="pl-12 pr-12 h-12 bg-neutral-50 border-neutral-200 rounded-full text-sm focus-visible:ring-2 focus-visible:ring-blue-600"
-                autoFocus={isSearchOpen}
+                placeholder="Search products, brands, categories..."
+                className="pl-12 pr-12 h-12 rounded-full"
               />
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsSearchOpen(false)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 hover:bg-neutral-200 rounded-full"
+                className="absolute right-2 top-1/2 -translate-y-1/2"
               >
-                <X className="h-4 w-4 text-neutral-500" />
+                <X className="h-4 w-4" />
               </Button>
             </div>
           </div>
         </div>
-
-        {/* Mobile Search Bar */}
-        <div className="md:hidden border-t border-neutral-100 p-4 py-3 bg-neutral-50">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-            <Input
-              placeholder="Search..."
-              className="pl-10 h-10 bg-white border-neutral-200 rounded-full text-sm"
-            />
-          </div>
-        </div>
       </header>
 
-      {/* Spacer to prevent content jump */}
-      <div className="h-16 lg:h-20 md:h-[5.5rem]"></div>
+      {/* Spacer */}
+      <div className="h-16 lg:h-20 md:h-[5.5rem]" />
     </>
   );
 }

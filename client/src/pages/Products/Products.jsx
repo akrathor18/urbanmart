@@ -29,7 +29,6 @@ export default function ProductsPage() {
     }
   }, [debouncedPrice]);
 
-  
   useEffect(() => {
     fetchCategories();
 
