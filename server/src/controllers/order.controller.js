@@ -6,7 +6,7 @@ export const orderProductController = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
      const userId = Number(req.user.id);
-    const order = await orderService.orderProduct({
+    const order = await orderService.orderProducts({
       userId,
       ...req.body,
     });

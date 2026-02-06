@@ -1,27 +1,27 @@
 import { prisma } from "../config/db.js";
 
-export const orderProduct = async (orderProductData) => {
-  const { userId, productId, quantity, address, payment  } = orderProductData;
-
-  if (!userId || !productId || quantity <= 0 || !address || !payment ) {
-    throw new Error("All fields are required");
-  }
+export const orderProducts = async ({ userId, items, address, payment }) => {
+  if (!items?.length) throw new Error("No items to order");
 
   return await prisma.$transaction(async (tx) => {
-    const product = await tx.product.findUnique({
-      where: { id: Number(productId) },
+    let total = 0;
+
+    // 1️⃣ Validate all products + stock
+    const products = await tx.product.findMany({
+      where: { id: { in: items.map(i => i.productId) } },
     });
 
-    if (!product) {
-      throw new Error("Product not found");
+    for (const item of items) {
+      const product = products.find(p => p.id === item.productId);
+
+      if (!product) throw new Error("Product not found");
+      if (product.stock < item.quantity)
+        throw new Error(`Insufficient stock for ${product.name}`);
+
+      total += product.price * item.quantity;
     }
 
-    if (product.stock < quantity) {
-      throw new Error("Insufficient stock");
-    }
-
-    const total = product.price * quantity;
-
+    // 2️⃣ Create order
     const order = await tx.order.create({
       data: {
         userId,
@@ -36,37 +36,40 @@ export const orderProduct = async (orderProductData) => {
             city: address.city,
             state: address.state,
             pincode: address.pincode,
-            country: address.country,
+            country: address.country|| "India",
           },
         },
         items: {
-          create: {
-            productId: product.id,
-            quantity,
-            price: product.price,
-          },
+          create: items.map(item => {
+            const product = products.find(p => p.id === item.productId);
+            return {
+              productId: product.id,
+              quantity: item.quantity,
+              price: product.price,
+            };
+          }),
         },
       },
       include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
         address: true,
       },
     });
 
-    await tx.product.update({
-      where: { id: product.id },
-      data: {
-        stock: product.stock - quantity,
-      },
-    });
+    // 3️⃣ Update stock
+    for (const item of items) {
+      const product = products.find(p => p.id === item.productId);
+      await tx.product.update({
+        where: { id: product.id },
+        data: { stock: product.stock - item.quantity },
+      });
+    }
 
     return order;
   });
 };
+
+
 
 
 export const getUserOder = async (userId) => {
