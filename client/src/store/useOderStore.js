@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 export const useOrderStore = create((set) => ({
   loading: false,
   error: null,
-  Orders: null,
+  orders: [],
   isPlacingOrder: false,
 
   placeOder: async (playload) => {
@@ -27,6 +27,17 @@ export const useOrderStore = create((set) => ({
       return true;
     } catch (error) {
       console.log(error);
+    }
+  },
+
+  getOders: async () => {
+    try {
+      set({ loading: true, error: null });
+      const res = await api.get("/orders");
+      set({orders: res, loading: false,    })
+    } catch (error) {
+      console.log(error);
+      set({ error: error, loading: false });
     }
   },
 }));

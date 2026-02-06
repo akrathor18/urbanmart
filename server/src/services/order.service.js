@@ -77,18 +77,53 @@ export const getUserOder = async (userId) => {
   }
 
   const orders = await prisma.order.findMany({
-    where: { userId: Number(userId) },
-    include: {
-      items: {
-        include: {
-          product: true,
+  where: { userId },
+  orderBy: { createdAt: "desc" },
+  select: {
+    id: true,
+    orderCode: true,
+    total: true,
+    status: true,
+    payment: true,
+    createdAt: true,
+
+    items: {
+      select: {
+        quantity: true,
+        product: {
+          select: {
+            name: true,
+            price:true,
+          },
         },
       },
     },
-  });
+  },
+});
+
 
   if (!orders || orders.length === 0) {
     throw new Error("No orders found for this user");
   }
   return orders;
 };
+
+
+export const getOrderDetials = async (orderCode)=>{
+  if(!orderCode) {
+    throw new Error('OrderCode Required')
+  }
+ const order = await prisma.order.findUnique({
+  where: { orderCode },
+  include: {
+    address: true,
+    items: {
+      include: {
+        product: true,
+      },
+    },
+  },
+});
+
+return order
+}

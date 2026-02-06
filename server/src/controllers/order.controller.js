@@ -21,7 +21,6 @@ export const orderProductController = async (req, res) => {
 export const getUserOder = async (req, res) => {
   try {
      const userId = Number(req.user.id);
-    console.log(userId);
     const orders = await orderService.getUserOder(userId);
     res.status(200).json(orders);
   } catch (error) {
@@ -29,3 +28,14 @@ export const getUserOder = async (req, res) => {
     res.status(500).json({ message: error.message || "Server Error" });
   }
 };
+
+export const getOrderDetails = async (req, res)=>{
+  try {
+     const { orderCode } =req.params;
+const orderDetail = await orderService.getOrderDetials(orderCode)
+res.status(201).json(orderDetail)
+  } catch (error) {
+    console.log(error);
+      res.status(500).json({message: error.message|| 'Server Error'})
+  }
+}

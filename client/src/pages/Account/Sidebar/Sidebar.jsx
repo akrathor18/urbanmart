@@ -14,7 +14,7 @@ function Sidebar({ user }) {
 
   return (
     <div className="lg:col-span-1">
-      <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+      <div className="bg-white  sticky top-28 rounded-xl shadow-sm p-4 sm:p-6">
         <div className="text-center mb-6">
           <div className="bg-blue-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3">
             <User className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
