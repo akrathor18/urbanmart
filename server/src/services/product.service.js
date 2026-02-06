@@ -36,6 +36,7 @@ export const getProductsByCategory = async (categoryId) => {
 
 export const getFilteredProducts = async (filters) => {
   const {
+     search,
     category,
     minPrice,
     maxPrice,
@@ -45,19 +46,45 @@ export const getFilteredProducts = async (filters) => {
     page = 1,
     limit = 12,
   } = filters;
+// Search (name, description, category)
+ const where = {};
+if (search) {
+  where.OR = [
+    {
+      name: {
+        contains: search,
+        mode: "insensitive",
+      },
+    },
+    {
+      description: {
+        contains: search,
+        mode: "insensitive",
+      },
+    },
+    {
+      category: {
+        is: {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      },
+    },
+  ];
+}
 
-  const where = {};
-
-  // Category
 if (category) {
   where.category = {
     is: {
       name: {
-        in: category.split(","), 
+        in: category.split(","),
       },
     },
-  }
+  };
 }
+
 
   // Price
   if (minPrice || maxPrice) {

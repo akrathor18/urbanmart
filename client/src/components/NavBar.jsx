@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ShoppingCart, Heart, Search, Menu, X, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
-
+import { useDebounce } from "@/hooks/useDebounce";
 export default function Navbar() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
   const { cart } = useCartStore();
   const { status } = useAuthStore();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+useEffect(() => {
+  if (!debouncedSearch.trim()) return;
+
+  navigate(`/products?search=${encodeURIComponent(debouncedSearch)}`);
+}, [debouncedSearch, navigate]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -59,9 +67,12 @@ export default function Navbar() {
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
                       <Input
-                        placeholder="Search products..."
-                        className="pl-10 h-11"
-                      />
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  placeholder="Search products..."
+  className="pl-10 h-11"
+/>
+
                     </div>
                   </div>
 
@@ -212,9 +223,13 @@ export default function Navbar() {
             <div className="relative max-w-2xl mx-auto">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
               <Input
-                placeholder="Search products, brands, categories..."
-                className="pl-12 pr-12 h-12 rounded-full"
-              />
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  placeholder="Search products, brands, categories..."
+  className="pl-12 pr-12 h-12 bg-neutral-50 border-neutral-200 rounded-full"
+  autoFocus={isSearchOpen}
+/>
+
               <Button
                 variant="ghost"
                 size="icon"
