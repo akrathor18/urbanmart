@@ -35,7 +35,7 @@ export default function ProductDetail() {
     fetchProducts();
     fetchProductById(id);
   }, [id, fetchProductById]);
-  const inStock = product.stock > 0;
+  const inStock = product?.stock > 0|| 0;
 
   // Loading state
   if (loadingProduct) {

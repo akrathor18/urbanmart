@@ -10,27 +10,34 @@ export const useProductStore = create((set, get) => ({
 
   error: null,
 
-  fetchProducts: async () => {
-    const { featuredProducts, products } = get();
-    if (featuredProducts.length > 0 && products.length > 0) return;
+ fetchProducts: async (params = {}, { skipCache = false } = {}) => {
+  set({ loadingProducts: true, error: null });
 
-    set({ loadingProducts: true, error: null });
+  try {
+    const query = new URLSearchParams(params).toString();
+    const data = await api.get(`/api/products?${query}`);
 
-    try {
-      const data = await api.get("/api/products");
+    set({
+      products: data.products,
+      loadingProducts: false,
+    });
+
+    // only set featured ONCE (home page use-case)
+    if (!skipCache && data.products.length && get().featuredProducts.length === 0) {
       set({
-        products: data.products,
         featuredProducts: data.products.slice(0, 8),
-        loadingProducts: false,
-      });
-    } catch (error) {
-      console.log(error);
-      set({
-        error: "Failed to fetch products",
-        loadingProducts: false,
       });
     }
-  },
+
+  } catch (error) {
+    console.log(error);
+    set({
+      error: "Failed to fetch products",
+      loadingProducts: false,
+    });
+  }
+},
+
 
   fetchProductById: async (id) => {
     set({ loadingProduct: true, error: null });
