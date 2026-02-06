@@ -4,10 +4,9 @@ import ShippingInfo from "../ShippingInfo/ShippingInfo.jsx";
 import ShippingMethod from "../ShippingMethod/ShippingMethod.jsx";
 import PaymentMethod from "../PaymentMethod/PaymentMethod.jsx";
 import CardInfo from "../CardInfo/CardInfo.jsx";
-import { mapFormToOrderPayload } from "@/utils/mapPlayload.js";
+import { mapCartToOrderPayload } from "@/utils/mapPlayload.js";
 export default function CheckoutForm({ onOrderComplete }) {
   const cart = useCartStore((s) => s.cart);
-  const clearCart = useCartStore((s) => s.clearCart);
 
   const {
     register,
@@ -38,11 +37,11 @@ export default function CheckoutForm({ onOrderComplete }) {
   const total = subtotal + shipping + tax;
 
   const onSubmit = async (data) => {
-  const payload = mapFormToOrderPayload({
-    data,
-    productId: cart[0].id,
-    quantity: cart[0].quantity,
+  const payload = mapCartToOrderPayload({
+    cart,
+    formData: data,
   });
+
 
   console.log("FINAL PAYLOAD →", payload);
 

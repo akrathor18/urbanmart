@@ -25,23 +25,20 @@ export const mapFormToProfilePayload = (data) => ({
 });
 
 
-export const mapFormToOrderPayload = ({ data, productId, quantity }) => {
-  console.log(data);
-
-  return {
-    productId,
-    quantity,
-    payment: data.paymentMethod.toUpperCase(),
-    address: {
-      fullName: `${data.firstName} ${data.lastName}`,
-      phone: data.phone,
-      line1: data.address,
-      city: data.city,
-      state: data.state,
-      pincode: data.zipCode,
-      country: "India",
-
-    },
-  };
-};
+export const mapCartToOrderPayload = ({ cart, formData }) => ({
+  payment: formData.paymentMethod.toUpperCase(),
+  address: {
+    fullName: `${formData.firstName} ${formData.lastName}`,
+    phone: formData.phone,
+    line1: formData.address,
+    city: formData.city,
+    state: formData.state,
+    pincode: formData.zipCode,
+    country: "India",
+  },
+  items: cart.map(item => ({
+    productId: item.id,
+    quantity: item.quantity,
+  })),
+});
 

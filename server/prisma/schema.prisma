@@ -93,6 +93,7 @@ model WishlistItem {
 
 model Order {
   id        Int            @id @default(autoincrement())
+  orderCode String?   @unique
   userId    Int
   total     Float
   status    STATUS         @default(PENDING)

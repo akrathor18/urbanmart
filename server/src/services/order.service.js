@@ -1,12 +1,12 @@
 import { prisma } from "../config/db.js";
-
+import { generateOrderCode } from "../utils/generateOrderCode.js";
 export const orderProducts = async ({ userId, items, address, payment }) => {
   if (!items?.length) throw new Error("No items to order");
 
   return await prisma.$transaction(async (tx) => {
     let total = 0;
 
-    // 1️⃣ Validate all products + stock
+    //Validate all products + stock
     const products = await tx.product.findMany({
       where: { id: { in: items.map(i => i.productId) } },
     });
@@ -21,9 +21,10 @@ export const orderProducts = async ({ userId, items, address, payment }) => {
       total += product.price * item.quantity;
     }
 
-    // 2️⃣ Create order
+    //Create order
     const order = await tx.order.create({
       data: {
+        orderCode: generateOrderCode(),
         userId,
         payment,
         total,
@@ -68,8 +69,6 @@ export const orderProducts = async ({ userId, items, address, payment }) => {
     return order;
   });
 };
-
-
 
 
 export const getUserOder = async (userId) => {
