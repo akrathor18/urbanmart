@@ -6,7 +6,8 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import { formatPrice } from "@/utils/formatPrice";
 function ProductCard({ products }) {
   const navigate = useNavigate();
-  const inStock = products.inStock;
+  const inStock =  products.stock > 0;
+  
   const { addToCart } = useCartStore();
   const { toggleWishlist, isWishlisted } = useWishlistStore();
   return (

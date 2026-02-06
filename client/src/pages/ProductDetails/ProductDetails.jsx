@@ -22,20 +22,20 @@ export default function ProductDetail() {
   const { id } = useParams();
 
   const fetchProducts = useProductStore((state) => state.fetchProducts);
-  const product = useProductStore((state) => state.product);
-  const products = useProductStore((state) => state.products);
+  const product = useProductStore((state) => state.product); // selected product detail
+  const products = useProductStore((state) => state.products); //full product lits
   const loadingProduct = useProductStore((state) => state.loadingProduct);
   const error = useProductStore((state) => state.error);
   const fetchProductById = useProductStore((state) => state.fetchProductById);
   const { addToCart } = useCartStore();
   const { toggleWishlist, isWishlisted } = useWishlistStore();
-
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   useEffect(() => {
     fetchProducts();
     fetchProductById(id);
   }, [id, fetchProductById]);
+  const inStock = product.stock > 0;
 
   // Loading state
   if (loadingProduct) {
@@ -127,7 +127,9 @@ export default function ProductDetail() {
                     toggleWishlist(product);
                   }}
                 >
-                  <Heart className={`h-6 w-6 ${isWishlisted(product.id)?`text-red-400 fill-red-400`:`text-gray-400 `}`} />
+                  <Heart
+                    className={`h-6 w-6 ${isWishlisted(product.id) ? `text-red-400 fill-red-400` : `text-gray-400 `}`}
+                  />
                 </button>
               </div>
 
@@ -150,7 +152,9 @@ export default function ProductDetail() {
 
               {/* Price */}
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-3xl font-bold">{formatPrice(product.price)}</span>
+                <span className="text-3xl font-bold">
+                  {formatPrice(product.price)}
+                </span>
               </div>
 
               {/* Description */}
@@ -175,7 +179,7 @@ export default function ProductDetail() {
 
               {/* Stock Status */}
               <div className="mb-6">
-                {product.inStock ? (
+                {inStock? (
                   <span className="text-green-600 font-medium text-sm sm:text-base">
                     ✓ In Stock ({product.stock} available)
                   </span>
@@ -206,9 +210,9 @@ export default function ProductDetail() {
                 </div>
 
                 <button
-                  disabled={!product.inStock}
+                  disabled={!inStock}
                   onClick={() => addToCart(product, quantity)}
-                  className="bg-black text-white px-6 py-3 rounded-lg flex items-center gap-2 disabled:bg-gray-400"
+                  className="bg-black text-white px-6 py-3 rounded-lg flex items-center gap-2 disabled:cursor-not-allowed disabled:bg-gray-400"
                 >
                   <ShoppingCart className="h-5 w-5" />
                   Add to Cart
