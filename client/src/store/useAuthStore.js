@@ -38,7 +38,7 @@ export const useAuthStore = create((set, get) => ({
       success: "Signed in successfully!",
       error: {
         render({ data }) {
-          return data?.response?.data?.message || "Login failed";
+          return data || "Login failed";
         },
       },
     });
@@ -57,7 +57,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // 📝 Register
+  // Register
   signUp: async (data) => {
     set({ isSigning: true });
 

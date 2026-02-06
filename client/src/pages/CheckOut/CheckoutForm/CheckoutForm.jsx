@@ -5,9 +5,11 @@ import ShippingMethod from "../ShippingMethod/ShippingMethod.jsx";
 import PaymentMethod from "../PaymentMethod/PaymentMethod.jsx";
 import CardInfo from "../CardInfo/CardInfo.jsx";
 import { mapCartToOrderPayload } from "@/utils/mapPlayload.js";
+import { useOrderStore } from "@/store/useOderStore.js";
 export default function CheckoutForm({ onOrderComplete }) {
+  const { placeOder, isPlacingOrder } = useOrderStore();
   const cart = useCartStore((s) => s.cart);
-
+  const { clearCart } = useCartStore();
   const {
     register,
     handleSubmit,
@@ -37,19 +39,17 @@ export default function CheckoutForm({ onOrderComplete }) {
   const total = subtotal + shipping + tax;
 
   const onSubmit = async (data) => {
-  const payload = mapCartToOrderPayload({
-    cart,
-    formData: data,
-  });
+    const payload = mapCartToOrderPayload({
+      cart,
+      formData: data,
+    });
 
-
-  console.log("FINAL PAYLOAD →", payload);
-
-  // await placeOrder(payload)
-  // clearCart()
-  // onOrderComplete()
-};
-
+    const success = placeOder(payload);
+    if (success) {
+      clearCart();
+      onOrderComplete();
+    }
+  };
 
   return (
     <form
@@ -65,10 +65,14 @@ export default function CheckoutForm({ onOrderComplete }) {
       )}
 
       <button
-        disabled={!isValid}
+        disabled={!isValid || isPlacingOrder}
         className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold disabled:bg-blue-400"
       >
-        {paymentMethod === "card" ? `Pay ₹${total}` : "Place Order"}
+        {isPlacingOrder
+          ? "Placing order..."
+          : paymentMethod === "card"
+            ? `Pay ₹${total}`
+            : "Place Order"}
       </button>
     </form>
   );
