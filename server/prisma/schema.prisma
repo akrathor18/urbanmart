@@ -9,16 +9,16 @@ datasource db {
 
 // user model with cart and wishlist
 model User {
-  id       Int       @id @default(autoincrement())
-  firstName     String
-  lastName     String
-  email    String    @unique
-  password String
-  role     Role      @default(USER)
-  phone String?
-  cart     Cart?
-  wishlist Wishlist?
-  orders   Order[]
+  id        Int       @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String    @unique
+  password  String
+  role      Role      @default(USER)
+  phone     String?
+  cart      Cart?
+  wishlist  Wishlist?
+  orders    Order[]
   addresses Address[]
 }
 
@@ -28,25 +28,24 @@ enum Role {
 }
 
 model Address {
-  id        Int    @id @default(autoincrement())
-  userId    Int
+  id     Int @id @default(autoincrement())
+  userId Int
 
-  fullName  String
-  phone     String?
-  line1     String
-  line2     String?
-  city      String
-  state     String
-  pincode   String
-  country   String
+  fullName String
+  phone    String?
+  line1    String
+  line2    String?
+  city     String
+  state    String
+  pincode  String
+  country  String
 
   isDefault Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, isDefault])
-
 }
-
 
 // cart model with cart items
 model Cart {
@@ -93,34 +92,32 @@ model WishlistItem {
 // oder model
 
 model Order {
-  id        Int      @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   userId    Int
   total     Float
-  status    STATUS   @default(PENDING)
-  createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id])
-  items   OrderItem[]
-  address OrderAddress?
+  status    STATUS         @default(PENDING)
+  createdAt DateTime       @default(now())
+  payment   PAYMENT_METHOD
+  user      User           @relation(fields: [userId], references: [id])
+  items     OrderItem[]
+  address   OrderAddress?
 }
 
-
 model OrderAddress {
-  id        Int    @id @default(autoincrement())
-  orderId   Int    @unique
+  id      Int @id @default(autoincrement())
+  orderId Int @unique
 
-  fullName  String
-  phone     String
-  line1     String
-  line2     String?
-  city      String
-  state     String
-  pincode   String
-  country   String
+  fullName String
+  phone    String
+  line1    String
+  line2    String?
+  city     String
+  state    String
+  pincode  String
+  country  String
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
-
 
 model OrderItem {
   id        Int   @id @default(autoincrement())
@@ -135,12 +132,20 @@ model OrderItem {
   @@unique([orderId, productId])
 }
 
+enum PAYMENT_METHOD {
+  COD
+  UPI
+  CARD
+  NET_BANKING
+}
+
 enum STATUS {
   PENDING
   SHIPPED
   DELIVERED
   CANCELED
 }
+
 // Category and Product models
 model Category {
   id       Int       @id @default(autoincrement())
@@ -149,7 +154,7 @@ model Category {
 }
 
 model Product {
-  id            Int    @id @default(autoincrement())
+  id            Int            @id @default(autoincrement())
   name          String
   image         String
   images        String[]
@@ -160,11 +165,11 @@ model Product {
   categoryId    Int
   rating        Int
   review        Int
-  features     String[]
+  features      String[]
   category      Category       @relation(fields: [categoryId], references: [id])
   cartItems     CartItem[]
   wishlistItems WishlistItem[]
   OrderItem     OrderItem[]
-  
-  createdAt   DateTime @default(now())
+
+  createdAt DateTime @default(now())
 }

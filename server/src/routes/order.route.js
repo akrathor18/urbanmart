@@ -9,6 +9,6 @@ import express from "express";
 const router = express.Router();
 
 router.post("/", authMiddleware, orderProductController);
-router.get("/:userId", authMiddleware, getUserOder);
+router.get("/", authMiddleware, getUserOder);
 
 export default router;

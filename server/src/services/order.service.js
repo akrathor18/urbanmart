@@ -1,14 +1,13 @@
 import { prisma } from "../config/db.js";
 
 export const orderProduct = async (orderProductData) => {
-  const { userId, productId, quantity, address } = orderProductData;
+  const { userId, productId, quantity, address, payment  } = orderProductData;
 
-  if (!userId || !productId || !quantity || !address) {
+  if (!userId || !productId || quantity <= 0 || !address || !payment ) {
     throw new Error("All fields are required");
   }
 
   return await prisma.$transaction(async (tx) => {
-    //  Get product
     const product = await tx.product.findUnique({
       where: { id: Number(productId) },
     });
@@ -23,12 +22,23 @@ export const orderProduct = async (orderProductData) => {
 
     const total = product.price * quantity;
 
-    // Create order
     const order = await tx.order.create({
       data: {
-        userId: Number(userId),
-        address,
+        userId,
+        payment,
         total,
+        address: {
+          create: {
+            fullName: address.fullName,
+            phone: address.phone,
+            line1: address.line1,
+            line2: address.line2 || null,
+            city: address.city,
+            state: address.state,
+            pincode: address.pincode,
+            country: address.country,
+          },
+        },
         items: {
           create: {
             productId: product.id,
@@ -43,10 +53,10 @@ export const orderProduct = async (orderProductData) => {
             product: true,
           },
         },
+        address: true,
       },
     });
 
-    // Update stock
     await tx.product.update({
       where: { id: product.id },
       data: {
@@ -57,6 +67,7 @@ export const orderProduct = async (orderProductData) => {
     return order;
   });
 };
+
 
 export const getUserOder = async (userId) => {
   if (!userId) {
