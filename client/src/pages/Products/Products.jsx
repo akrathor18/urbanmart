@@ -1,9 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
+import { useDebounce } from "@/hooks/useDebounce";
 import { useProductStore } from "../../store/useProductStore.js";
 import { useCategoryStore } from "@/store/useCategoryStore";
-
 import ProductCardSkeleton from "../Home/loader/ProductCardSkeleton.jsx";
 import ErrorState from "../../components/ErrorState.jsx";
 import ProductCard from "./ProductsCard/ProductCards.jsx";
@@ -15,27 +14,32 @@ export default function ProductsPage() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // 🔑 READ PARAMS (single source of truth)
-const category = searchParams.get("category");
-const minPrice = Number(searchParams.get("minPrice") || 500);
-const maxPrice = Number(searchParams.get("maxPrice") || 10000);
-const sort = searchParams.get("sort") || "popularity";
-const page = Number(searchParams.get("page") || 1);
-const limit = 8;
+  const category = searchParams.get("category");
+  const maxPrice = Number(searchParams.get("maxPrice") || 10000);
+  const sort = searchParams.get("sort") || "popularity";
 
-useEffect(() => {
-  fetchCategories();
+  const [priceValue, setPriceValue] = useState(maxPrice);
+  const debouncedPrice = useDebounce(priceValue, 500);
+  useEffect(() => {
+    if (debouncedPrice !== maxPrice) {
+      const params = new URLSearchParams(searchParams);
+      params.set("maxPrice", debouncedPrice);
+      params.set("page", 1);
+      setSearchParams(params);
+    }
+  }, [debouncedPrice]);
 
-  // ✅ ONLY params user actually selected
-  const params = Object.fromEntries(searchParams.entries());
+  
+  useEffect(() => {
+    fetchCategories();
 
-  fetchProducts(
-    Object.keys(params).length > 0 ? params : undefined,
-    { skipCache: true }
-  );
-}, [searchParams]);
+    const params = Object.fromEntries(searchParams.entries());
 
-  // 🔧 Helper to update URL params
+    fetchProducts(Object.keys(params).length > 0 ? params : undefined, {
+      skipCache: true,
+    });
+  }, [searchParams]);
+
   const updateParams = (key, value) => {
     const params = new URLSearchParams(searchParams);
 
@@ -71,7 +75,7 @@ useEffect(() => {
                     onChange={() =>
                       updateParams(
                         "category",
-                        category === item.name ? null : item.name
+                        category === item.name ? null : item.name,
                       )
                     }
                   />
@@ -88,8 +92,8 @@ useEffect(() => {
               type="range"
               min={500}
               max={10000}
-              value={maxPrice}
-              onChange={(e) => updateParams("maxPrice", e.target.value)}
+              value={priceValue}
+              onChange={(e) => setPriceValue(Number(e.target.value))}
               className="w-full"
             />
             <div className="flex justify-between text-sm text-gray-500 mt-2">
@@ -131,9 +135,7 @@ useEffect(() => {
           {error && <ErrorState />}
           {loadingProducts && <ProductCardSkeleton />}
 
-          {!loadingProducts && !products.length && (
-           <NoProductsFound/>
-          )}
+          {!loadingProducts && !products.length && <NoProductsFound />}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {products.map((item) => (
