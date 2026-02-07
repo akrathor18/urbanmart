@@ -6,22 +6,25 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useDebounce } from "@/hooks/useDebounce";
 export default function Navbar() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 500);
   const { cart } = useCartStore();
   const { status } = useAuthStore();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-useEffect(() => {
-  if (!debouncedSearch.trim()) return;
 
-  navigate(`/products?search=${encodeURIComponent(debouncedSearch)}`);
-}, [debouncedSearch, navigate]);
+  
+
+  const handleSearch = () => {
+    if (!search.trim()) return;
+
+    navigate(`/products?search=${encodeURIComponent(search)}`);
+    setIsSearchOpen(false); // close desktop search
+    setMobileOpen(false); // close mobile sheet
+  };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -65,14 +68,23 @@ useEffect(() => {
                   {/* Mobile Search */}
                   <div className="mb-6">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleSearch}
+                        className={"absolute top-1 left-1 z-10"}
+                      >
+                        <Search className="h-5 w-5" />
+                      </Button>
                       <Input
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-  placeholder="Search products..."
-  className="pl-10 h-11"
-/>
-
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleSearch();
+                        }}
+                        placeholder="Search products..."
+                        className="pl-10 h-11"
+                      />
                     </div>
                   </div>
 
@@ -223,12 +235,15 @@ useEffect(() => {
             <div className="relative max-w-2xl mx-auto">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
               <Input
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-  placeholder="Search products, brands, categories..."
-  className="pl-12 pr-12 h-12 bg-neutral-50 border-neutral-200 rounded-full"
-  autoFocus={isSearchOpen}
-/>
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSearch();
+                }}
+                placeholder="Search products, brands, categories..."
+                className="pl-12 pr-12 h-12 bg-neutral-50 border-neutral-200 rounded-full"
+                autoFocus={isSearchOpen}
+              />
 
               <Button
                 variant="ghost"

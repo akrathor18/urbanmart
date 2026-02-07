@@ -28,11 +28,7 @@ export default function Hero() {
               </Button>
             </Link>
 
-            <Link to="/categories">
-              <Button variant="outline" size="lg">
-                Browse Categories
-              </Button>
-            </Link>
+           
           </div>
         </div>
 
