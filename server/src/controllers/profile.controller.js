@@ -26,3 +26,20 @@ export const updateProfile=async (req, res)=>{
         res.status(500).json({message: error.message})
     }
 }
+
+
+export const syncUserDataController = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { cart, wishlist } = req.body;
+
+    await profileService.syncUserDataService(userId, cart, wishlist);
+
+    res.status(200).json({
+      success: true,
+      message: "User data synced successfully"
+    });
+  } catch (error) {
+    next(error);
+  }
+};
