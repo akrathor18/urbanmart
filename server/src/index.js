@@ -7,7 +7,9 @@ import categoryRoutes from "./routes/category.route.js";
 import orderRoutes from "./routes/order.route.js";
 import profileRoutes from "./routes/profile.route.js"
 import cartRoutes from "./routes/cart.route.js"
+import wishlistRoutes from './routes/wishlist.route.js'
 import cookieParser from "cookie-parser";
+
 import cors from 'cors'
 const app = express();
 const prisma = new PrismaClient();
@@ -16,7 +18,6 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      // "https://studyhub-dev.web.app", // Firebase URL
     ],
     credentials: true,
   }),
@@ -31,6 +32,8 @@ app.use("/api", categoryRoutes);
 app.use("/orders", orderRoutes);
 app.use("/user", profileRoutes);
 app.use("/cart", cartRoutes)
+app.use('/wishlist', wishlistRoutes)
+
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
 });
