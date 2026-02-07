@@ -5,8 +5,10 @@ import { formatPrice } from "@/utils/formatPrice";
 
 import EmptyCart from "./EmptyCart/EmptyCart";
 import CardCard from "./Cartcards/CardCard";
+
+import { removeFromCartAction, updateCartQtyAction } from "@/service/cart.action";
 export default function Cart() {
-  const { cart, removeFromCart, updateQuantity } = useCartStore();
+  const { cart } = useCartStore();
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -46,8 +48,8 @@ export default function Cart() {
                   item={item}
                   isMin={isMin}
                   isMax={isMax}
-                  updateQuantity={updateQuantity}
-                  removeFromCart={removeFromCart}
+                  updateQuantity={updateCartQtyAction}
+                  removeFromCart={removeFromCartAction}
                   formatPrice={formatPrice}
                 />
 

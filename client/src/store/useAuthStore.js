@@ -8,7 +8,8 @@ export const useAuthStore = create((set, get) => ({
   isSigning: false,
 
   checkAuth: async () => {
-    set({ status: "loading" });
+    const { status } = get();
+    if (status !== "loading") set({ status: "loading" });
 
     try {
       const res = await api.get("/auth/me");

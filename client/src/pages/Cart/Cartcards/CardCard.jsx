@@ -8,17 +8,18 @@ function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPr
   const { toggleWishlist, isWishlisted } = useWishlistStore();
 
   
-  const wishlisted = isWishlisted(item.id);
+  const wishlisted = isWishlisted(item.product.id);
   return (
-    <div key={item.id} className="p-4 sm:p-6">
+    <div key={item.cartId} className="p-4 sm:p-6">
+      {console.log(item)}
       <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
         {/* Product Image */}
         <div className="flex-shrink-0">
-          <Link to={`/products/${item.id}`}>
+          <Link to={`/products/${item.product.id}`}>
             <img
               loading="lazy"
-              src={item.image || "/placeholder.svg"}
-              alt={item.name}
+              src={item.product.image || "/placeholder.svg"}
+              alt={item.product.name}
               className="w-full sm:w-24 h-48 sm:h-24 object-cover rounded-lg hover:opacity-75 transition-opacity"
             />
           </Link>
@@ -26,21 +27,21 @@ function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPr
 
         {/* Product Details */}
         <div className="flex-1 min-w-0">
-          <Link to={`/product/${item.id}`}>
+          <Link to={`/products/${item.product.id}`}>
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors mb-2">
-              {item.name}
+              {item.product.name}
             </h3>
           </Link>
           <p className="text-gray-600 text-sm sm:text-base mb-2 line-clamp-2">
-            {item.description}
+            {item.product.description}
           </p>
           <div className="flex items-center space-x-4">
             <span className="text-lg sm:text-xl font-bold text-gray-900">
-              {formatPrice(item.price)}
+              {formatPrice(item.product.price)}
             </span>
-            {item.originalPrice > item.price && (
+            {item.product.originalPrice > item.price && (
               <span className="text-sm sm:text-base text-gray-500 line-through">
-                {formatPrice(item.originalPrice)}
+                {formatPrice(item.product.originalPrice)}
               </span>
             )}
           </div>
@@ -82,7 +83,7 @@ function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPr
             </button>
 
             <button
-              onClick={() => removeFromCart(item.id)}
+              onClick={() => removeFromCart(item.product.id)}
               className="p-2 text-gray-400 hover:text-red-500 transition-colors"
               title="Remove from Cart"
             >
@@ -97,7 +98,7 @@ function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPr
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Subtotal:</span>
           <span className="text-lg font-bold text-gray-900">
-            {formatPrice(item.price * item.quantity)}
+            {formatPrice(item.product.price * item.quantity)}
           </span>
         </div>
       </div>

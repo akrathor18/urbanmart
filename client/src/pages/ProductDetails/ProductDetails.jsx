@@ -18,6 +18,9 @@ import { useCartStore } from "@/store/useCartStore";
 import { useProductStore } from "@/store/useProductStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { formatPrice } from "@/utils/formatPrice";
+
+import { addToCartAction } from "@/service/cart.action";
+import { toggleWishlistAction } from "@/service/wishlist.action";
 export default function ProductDetail() {
   const { id } = useParams();
 
@@ -27,8 +30,9 @@ export default function ProductDetail() {
   const loadingProduct = useProductStore((state) => state.loadingProduct);
   const error = useProductStore((state) => state.error);
   const fetchProductById = useProductStore((state) => state.fetchProductById);
-  const { addToCart } = useCartStore();
-  const { toggleWishlist, isWishlisted } = useWishlistStore();
+
+
+  const { isWishlisted } = useWishlistStore();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   useEffect(() => {
@@ -124,7 +128,7 @@ export default function ProductDetail() {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleWishlist(product);
+                    toggleWishlistAction(product);
                   }}
                 >
                   <Heart
@@ -211,7 +215,7 @@ export default function ProductDetail() {
 
                 <button
                   disabled={!inStock}
-                  onClick={() => addToCart(product, quantity)}
+                  onClick={() => addToCartAction(product, quantity)}
                   className="bg-black text-white px-6 py-3 rounded-lg flex items-center gap-2 disabled:cursor-not-allowed disabled:bg-gray-400"
                 >
                   <ShoppingCart className="h-5 w-5" />

@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { validationRules } from "@/utils/validation.js";
 import { useAuthStore } from "@/store/useAuthStore";
-
+import { syncUserDataAfterAuth } from "@/utils/syncUserData";
 export default function Signup() {
   const { signUp, isSigning, status } = useAuthStore();
   const navigate = useNavigate();
@@ -50,6 +50,7 @@ useEffect(() => {
   const onSubmit = async (data) => {
     const success = signUp(data);
     if (success) {
+      syncUserDataAfterAuth()
       navigate(from, { replace: true });
     }
   };

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { User, Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { validationRules } from "@/utils/validation.js";
 import { useAuthStore } from "@/store/useAuthStore";
+import { syncUserDataAfterAuth } from "@/utils/syncUserData";
 /* ---------------- DEMO CREDENTIALS ---------------- */
 const DEMO_CREDENTIALS = {
   email: "demo@example.com",
@@ -38,12 +39,13 @@ useEffect(() => {
    const onSubmit = async (data) => {
     const success = await signIn(data);
     if (success) {
+      syncUserDataAfterAuth()
       navigate(from, { replace: true });
     }
   };
 
    const handleDemoLogin = async () => {
-    const success = await signIn({
+    const success = await signIn({  
       email: DEMO_CREDENTIALS.email,
       password: DEMO_CREDENTIALS.password,
     });
@@ -82,7 +84,7 @@ useEffect(() => {
 
             <div className="font-medium text-gray-900">Demo User</div>
             <div className="text-sm text-gray-600">
-              demo@UrbanMart.com · demo123
+              {DEMO_CREDENTIALS.email } · demo123
             </div>
           </button>
 

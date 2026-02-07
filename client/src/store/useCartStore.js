@@ -54,6 +54,10 @@ export const useCartStore = create(
           ),
         })),
 
+        setCartFromDB:(items)=>{
+          set({cart: items})
+        },
+
       clearCart: () => set({ cart: [] }),
     }),
     {

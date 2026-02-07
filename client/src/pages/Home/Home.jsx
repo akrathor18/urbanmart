@@ -3,6 +3,8 @@ import Hero from "./Hero/Hero.jsx";
 import React from "react";
 
 function Home() {
+  // App.jsx or main layout
+
   return (
     <>
       <Hero />
