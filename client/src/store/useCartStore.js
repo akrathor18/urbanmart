@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { toast } from "react-toastify";
 
 export const useCartStore = create(
   persist(
@@ -14,15 +13,6 @@ export const useCartStore = create(
           );
 
           if (exists) {
-            if (exists.quantity + quantity > product.stock) {
-              toast.dismiss();
-              toast.error("Out Of Stock");
-              return state;
-            }
-
-            toast.dismiss();
-            toast.info("Quantity increased!");
-
             return {
               cart: state.cart.map((p) =>
                 p.id === product.id
@@ -32,19 +22,18 @@ export const useCartStore = create(
             };
           }
 
-          toast.dismiss();
-          toast.success("Added to cart");
-
           return {
             cart: [...state.cart, { ...product, quantity }],
           };
         }),
 
+      // ❌ Remove item
       removeFromCart: (id) =>
         set((state) => ({
           cart: state.cart.filter((item) => item.id !== id),
         })),
 
+      // 🔄 Update quantity
       updateQuantity: (id, quantity) =>
         set((state) => ({
           cart: state.cart.map((item) =>
@@ -54,14 +43,21 @@ export const useCartStore = create(
           ),
         })),
 
-        setCartFromDB:(items)=>{
-          set({cart: items})
-        },
+      // 🔁 Normalize DB cart → store
+      setCartFromDB: (items) =>
+        set({
+          cart: items.map((item) => ({
+            ...item.product,
+            id: item.product.id,
+            quantity: item.quantity,
+          })),
+        }),
 
+      // 🧹 Clear cart
       clearCart: () => set({ cart: [] }),
     }),
     {
-      name: "cart-storage", // 🔑 localStorage key
+      name: "cart-storage",
     }
   )
 );

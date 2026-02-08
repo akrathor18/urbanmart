@@ -3,9 +3,9 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import { useCartStore } from "@/store/useCartStore";
 import EmptyWishlist from "./EmptyWishlist/EmptyWishlist";
 import WishlistCard from "./WishlistCard/WishlistCard";
+import { addToCartAction } from "@/service/cart.action";
 import { ArrowLeft } from "lucide-react";
 export default function Wishlist() {
-  const { addToCart } = useCartStore();
   const { wishlist } = useWishlistStore();
   if (wishlist.length === 0) {
     return <EmptyWishlist />;
@@ -51,7 +51,7 @@ export default function Wishlist() {
             </p>
             <button
               onClick={() => {
-                wishlist.forEach((item) => addToCart(item));
+                wishlist.forEach((item) => addToCartAction(item));
               }}
               className="bg-black text-white px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors text-sm sm:text-base"
             >

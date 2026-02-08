@@ -3,23 +3,23 @@ import { X, Plus, Minus, Heart } from "lucide-react";
 
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { Link } from "react-router-dom";
-
+import { toggleWishlistAction } from "@/service/wishlist.action";
 function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPrice }) {
-  const { toggleWishlist, isWishlisted } = useWishlistStore();
+  const {isWishlisted } = useWishlistStore();
 
   
-  const wishlisted = isWishlisted(item.product.id);
+  const wishlisted = isWishlisted(item.id);
   return (
-    <div key={item.cartId} className="p-4 sm:p-6">
+    <div key={item.id} className="p-4 sm:p-6">
       {console.log(item)}
       <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
         {/* Product Image */}
         <div className="flex-shrink-0">
-          <Link to={`/products/${item.product.id}`}>
+          <Link to={`/products/${item.id}`}>
             <img
               loading="lazy"
-              src={item.product.image || "/placeholder.svg"}
-              alt={item.product.name}
+              src={item.image || "/placeholder.svg"}
+              alt={item.name}
               className="w-full sm:w-24 h-48 sm:h-24 object-cover rounded-lg hover:opacity-75 transition-opacity"
             />
           </Link>
@@ -27,21 +27,21 @@ function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPr
 
         {/* Product Details */}
         <div className="flex-1 min-w-0">
-          <Link to={`/products/${item.product.id}`}>
+          <Link to={`/products/${item.id}`}>
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors mb-2">
-              {item.product.name}
+              {item.name}
             </h3>
           </Link>
           <p className="text-gray-600 text-sm sm:text-base mb-2 line-clamp-2">
-            {item.product.description}
+            {item.description}
           </p>
           <div className="flex items-center space-x-4">
             <span className="text-lg sm:text-xl font-bold text-gray-900">
-              {formatPrice(item.product.price)}
+              {formatPrice(item.price)}
             </span>
-            {item.product.originalPrice > item.price && (
+            {item.originalPrice > item.price && (
               <span className="text-sm sm:text-base text-gray-500 line-through">
-                {formatPrice(item.product.originalPrice)}
+                {formatPrice(item.originalPrice)}
               </span>
             )}
           </div>
@@ -71,7 +71,7 @@ function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPr
 
           <div className="flex items-center space-x-2">
             <button
-              onClick={() => toggleWishlist(item)}
+              onClick={() => toggleWishlistAction(item)}
               className={`p-2 transition-colors ${
                 wishlisted ? "text-red-500" : "text-gray-400 hover:text-red-500"
               }`}
@@ -83,7 +83,7 @@ function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPr
             </button>
 
             <button
-              onClick={() => removeFromCart(item.product.id)}
+              onClick={() => removeFromCart(item.id)}
               className="p-2 text-gray-400 hover:text-red-500 transition-colors"
               title="Remove from Cart"
             >
@@ -98,7 +98,7 @@ function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPr
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Subtotal:</span>
           <span className="text-lg font-bold text-gray-900">
-            {formatPrice(item.product.price * item.quantity)}
+            {formatPrice(item.price * item.quantity)}
           </span>
         </div>
       </div>
