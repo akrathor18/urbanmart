@@ -59,7 +59,6 @@ export const updateCartQtyAction = async (productId, quantity) => {
     });
 
     const res = await api.get("/cart");
-
     cartStore.setCartFromDB(res.items);
   }  catch (error) {
     console.log(error)

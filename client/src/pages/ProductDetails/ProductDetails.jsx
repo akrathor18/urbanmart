@@ -18,8 +18,9 @@ import { useProductStore } from "@/store/useProductStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { formatPrice } from "@/utils/formatPrice";
 
-import { addToCartAction } from "@/service/cart.action";
+import { updateCartQtyAction } from "@/service/cart.action";
 import { toggleWishlistAction } from "@/service/wishlist.action";
+import { toast } from "react-toastify";
 export default function ProductDetail() {
   const { id } = useParams();
 
@@ -30,7 +31,6 @@ export default function ProductDetail() {
   const error = useProductStore((state) => state.error);
   const fetchProductById = useProductStore((state) => state.fetchProductById);
 
-
   const { isWishlisted } = useWishlistStore();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -38,7 +38,7 @@ export default function ProductDetail() {
     fetchProducts();
     fetchProductById(id);
   }, [id, fetchProductById]);
-  const inStock = product?.stock > 0|| 0;
+  const inStock = product?.stock > 0 || 0;
 
   // Loading state
   if (loadingProduct) {
@@ -62,6 +62,13 @@ export default function ProductDetail() {
     )
     .slice(0, 4);
 
+  const updateQuantity = (productId, quantity) => {
+    const success = updateCartQtyAction(productId, quantity);
+    if (success) {
+      toast.dismiss();
+      toast.success("Added tp cart");
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="max-w-7xl mx-auto px-4">
@@ -182,7 +189,7 @@ export default function ProductDetail() {
 
               {/* Stock Status */}
               <div className="mb-6">
-                {inStock? (
+                {inStock ? (
                   <span className="text-green-600 font-medium text-sm sm:text-base">
                     ✓ In Stock ({product.stock} available)
                   </span>
@@ -214,7 +221,7 @@ export default function ProductDetail() {
 
                 <button
                   disabled={!inStock}
-                  onClick={() => addToCartAction(product, quantity)}
+                  onClick={() => updateQuantity(product.id, quantity)}
                   className="bg-black text-white px-6 py-3 rounded-lg flex items-center gap-2 disabled:cursor-not-allowed disabled:bg-gray-400"
                 >
                   <ShoppingCart className="h-5 w-5" />
