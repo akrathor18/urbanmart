@@ -37,11 +37,11 @@ export default function Signin() {
     },
   });
 
-  /* ✅ FIX #1: Add await, FIX #2: await sync */
+ 
   const onSubmit = async (data) => {
     const success = await signIn(data);
     if (success) {
-      await syncUserDataAfterAuth(); // ✅ Wait for migration to complete
+      await syncUserDataAfterAuth(); 
       navigate(from, { replace: true });
     }
   };

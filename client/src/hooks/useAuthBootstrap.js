@@ -14,19 +14,12 @@ export const useAuthBootstrap = () => {
       hasBootstrapped.current = false;
       return;
     }
-
-    // ✅ FIX: Only bootstrap ONCE per auth session
-    // This prevents destroying guest data during migration
     if (hasBootstrapped.current) return;
     hasBootstrapped.current = true;
 
     const bootstrap = async () => {
       const cartStore = useCartStore.getState();
       const wishlistStore = useWishlistStore.getState();
-
-      // ✅ CRITICAL CHANGE: Don't clear immediately!
-      // Wait for migration to complete first
-      // Migration happens in SignIn/SignUp BEFORE navigation
 
       try {
         const [cart, wishlist] = await Promise.all([
@@ -37,8 +30,6 @@ export const useAuthBootstrap = () => {
         console.log("[Auth Bootstrap] cart:", cart);
         console.log("[Auth Bootstrap] wishlist:", wishlist);
 
-        // ✅ Now it's safe to clear guest data
-        // Migration already sent it to backend
         cartStore.clearCart();
         wishlistStore.clearWishlist();
         localStorage.removeItem("cart-storage");
@@ -56,9 +47,6 @@ export const useAuthBootstrap = () => {
         console.error("[Auth Bootstrap] failed", err);
       }
     };
-
-    // ✅ Add small delay to let migration complete
-    // This ensures syncUserDataAfterAuth() finishes first
     const timer = setTimeout(bootstrap, 100);
     return () => clearTimeout(timer);
   }, [status]);

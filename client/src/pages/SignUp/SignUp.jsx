@@ -47,11 +47,11 @@ export default function Signup() {
 
   const password = watch("password");
 
-  /* ✅ FIX: Add await to signUp, await sync */
+
   const onSubmit = async (data) => {
-    const success = await signUp(data); // ✅ Wait for signup
+    const success = await signUp(data); 
     if (success) {
-      await syncUserDataAfterAuth(); // ✅ Wait for migration
+      await syncUserDataAfterAuth(); 
       navigate(from, { replace: true });
     }
   };
