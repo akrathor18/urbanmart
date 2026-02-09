@@ -9,16 +9,14 @@ export const useCartStore = create(
 
       addToCart: (product, quantity = 1) =>
         set((state) => {
-          const exists = state.cart.find(
-            (p) => p.id === product.id
-          );
+          const exists = state.cart.find((p) => p.id === product.id);
 
           if (exists) {
             return {
               cart: state.cart.map((p) =>
                 p.id === product.id
                   ? { ...p, quantity: p.quantity + quantity }
-                  : p
+                  : p,
               ),
             };
           }
@@ -36,20 +34,18 @@ export const useCartStore = create(
       updateQuantity: (id, quantity) =>
         set((state) => ({
           cart: state.cart.map((item) =>
-            item.id === id
-              ? { ...item, quantity }
-              : item
+            item.id === id ? { ...item, quantity } : item,
           ),
         })),
 
       setCartFromDB: (items) =>
-        set({
+        set(() => ({
           cart: items.map((item) => ({
             ...item.product,
             id: item.product.id,
             quantity: item.quantity,
           })),
-        }),
+        })),
 
       clearCart: () => set({ cart: [] }),
     }),
@@ -68,6 +64,6 @@ export const useCartStore = create(
         // Auth users → do NOT persist cart
         return {};
       },
-    }
-  )
+    },
+  ),
 );

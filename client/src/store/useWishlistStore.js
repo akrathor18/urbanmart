@@ -42,15 +42,20 @@ export const useWishlistStore = create(
 
       isWishlisted: (id) => get().wishlistIds.has(id),
 
-      // 🔁 DB → store
-      setWishlistFromDB: (items) =>
-        set({
-          wishlist: items,
-          wishlistIds: new Set(items.map((i) => i.id)),
+      setWishlistFromDB: (items = []) =>
+        set(() => {
+          const normalized = items.map((item) => ({
+            ...item.product, // UI expects product fields
+            id: item.product.id, // 🔥 ALWAYS product.id
+          }));
+
+          return {
+            wishlist: normalized,
+            wishlistIds: new Set(normalized.map((p) => p.id)),
+          };
         }),
 
-      clearWishlist: () =>
-        set({ wishlist: [], wishlistIds: new Set() }),
+      clearWishlist: () => set({ wishlist: [], wishlistIds: new Set() }),
     }),
     {
       name: "wishlist-storage",
@@ -73,6 +78,6 @@ export const useWishlistStore = create(
       onRehydrateStorage: () => (state) => {
         state.wishlistIds = new Set(state.wishlistIds || []);
       },
-    }
-  )
+    },
+  ),
 );

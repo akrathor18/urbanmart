@@ -1,14 +1,13 @@
 import React from 'react'
-import { Heart, ShoppingCart, X, ArrowLeft } from "lucide-react";
-import { useWishlistStore } from "@/store/useWishlistStore";
+import { Heart, ShoppingCart, X } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { formatPrice } from '@/utils/formatPrice';
 import { addToCartAction } from '@/service/cart.action';
+import { removeWishlistAction } from '@/service/wishlist.action';
 function WishlistCard({item}) {
     const handleAddToCart = (product) => {
         addToCartAction(product);
     };
-  const {removeWishlist } = useWishlistStore();
 
   return (
      <div
@@ -24,7 +23,7 @@ function WishlistCard({item}) {
                   />
                 </Link>
                 <button
-                  onClick={() => removeWishlist(item.id)}
+                  onClick={() => removeWishlistAction(item.id)}
                   className="absolute top-3 right-3 p-1.5 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
                 >
                   <X className="h-4 w-4 text-gray-600" />
@@ -64,7 +63,7 @@ function WishlistCard({item}) {
                     Add to Cart
                   </button>
                   <button
-                    onClick={() => removeWishlist(item.id)}
+                    onClick={() => removeWishlistAction(item.id)}
                     className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     <Heart className="h-4 w-4 text-red-500 fill-current" />

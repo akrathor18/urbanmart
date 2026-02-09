@@ -18,12 +18,13 @@ import Settings from "./Account/Settings/Settings";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEffect } from "react";
-
+import { useAuthBootstrap } from "@/hooks/useAuthBootstrap";
 export default function Pages() {
   const { status } = useAuthStore();
   useEffect(() => {
     useAuthStore.getState().checkAuth();
   }, []);
+  useAuthBootstrap();
 
   if (status === "idle" || status === "loading") {
     return null; // splash screen
