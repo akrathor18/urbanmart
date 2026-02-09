@@ -1,12 +1,12 @@
 import {
   getCartService,
   updateCartItemService,
-  removeCartItemService
+  removeCartItemService,
+  addToCartService
 } from "../services/cart.service.js";
 
 export const getCartController = async (req, res, next) => {
   try {
-    console.log(req.user.id)
     const cart = await getCartService(req.user.id);
     res.json(cart);
   } catch (err) {
@@ -32,5 +32,18 @@ export const removeCartItemController = async (req, res, next) => {
     res.json({ success: true });
   } catch (err) {
     next(err);
+  }
+};
+
+export const addToCart = async (req, res) => {
+  try {
+    const userId = req.user.id; 
+    const { productId } = req.body;
+
+    await addToCartService(userId, productId);
+
+    res.status(200).json({ message: "Added to cart" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };

@@ -26,10 +26,6 @@ export const useAuthBootstrap = () => {
           api.get("/cart"),
           api.get("/wishlist"),
         ]);
-
-        console.log("[Auth Bootstrap] cart:", cart);
-        console.log("[Auth Bootstrap] wishlist:", wishlist);
-
         cartStore.clearCart();
         wishlistStore.clearWishlist();
         localStorage.removeItem("cart-storage");

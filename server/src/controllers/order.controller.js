@@ -5,7 +5,7 @@ export const orderProductController = async (req, res) => {
     if (!req.user || !req.user.id) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-     const userId = Number(req.user.id);
+    const userId = Number(req.user.id);
     const order = await orderService.orderProducts({
       userId,
       ...req.body,
@@ -13,14 +13,14 @@ export const orderProductController = async (req, res) => {
 
     res.status(201).json(order);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(400).json({ message: error.message });
   }
 };
 
 export const getUserOder = async (req, res) => {
   try {
-     const userId = Number(req.user.id);
+    const userId = Number(req.user.id);
     const orders = await orderService.getUserOder(userId);
     res.status(200).json(orders);
   } catch (error) {
@@ -29,13 +29,13 @@ export const getUserOder = async (req, res) => {
   }
 };
 
-export const getOrderDetails = async (req, res)=>{
+export const getOrderDetails = async (req, res) => {
   try {
-     const { orderCode } =req.params;
-const orderDetail = await orderService.getOrderDetials(orderCode)
-res.status(201).json(orderDetail)
+    const { orderCode } = req.params;
+    const orderDetail = await orderService.getOrderDetials(orderCode);
+    res.status(201).json(orderDetail);
   } catch (error) {
     console.log(error);
-      res.status(500).json({message: error.message|| 'Server Error'})
+    res.status(500).json({ message: error.message || "Server Error" });
   }
-}
+};

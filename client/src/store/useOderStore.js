@@ -21,8 +21,7 @@ export const useOrderStore = create((set) => ({
     });
 
     try {
-      const res = await promise;
-      console.log(res);
+      await promise;
       set({ isPlacingOrder: false });
       return true;
     } catch (error) {

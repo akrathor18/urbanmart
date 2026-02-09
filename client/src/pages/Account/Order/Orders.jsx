@@ -34,7 +34,6 @@ function Orders() {
       </h1>
 
       <div className="space-y-4 sm:space-y-6">
-        {console.log(orders)}
         {orders.map((order) => (
           <div
             key={order.orderCode}
