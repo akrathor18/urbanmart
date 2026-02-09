@@ -20,11 +20,18 @@ export const updateCartItemService = async (
   productId,
   quantity
 ) => {
-  const cart = await prisma.cart.findUnique({
+  let cart = await prisma.cart.findUnique({
     where: { userId }
   });
-  if (!cart) return;
 
+  // ✅ ensure cart exists
+  if (!cart) {
+    cart = await prisma.cart.create({
+      data: { userId }
+    });
+  }
+
+  // ❌ remove item
   if (quantity <= 0) {
     await prisma.cartItem.deleteMany({
       where: { cartId: cart.id, productId }
@@ -32,9 +39,22 @@ export const updateCartItemService = async (
     return;
   }
 
-  await prisma.cartItem.updateMany({
-    where: { cartId: cart.id, productId },
-    data: { quantity }
+  // ✅ upsert cart item
+  await prisma.cartItem.upsert({
+    where: {
+      cartId_productId: {
+        cartId: cart.id,
+        productId
+      }
+    },
+    update: {
+      quantity
+    },
+    create: {
+      cartId: cart.id,
+      productId,
+      quantity
+    }
   });
 };
 

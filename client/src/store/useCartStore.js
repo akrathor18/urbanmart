@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export const useCartStore = create(
   persist(
@@ -27,13 +28,11 @@ export const useCartStore = create(
           };
         }),
 
-      // ❌ Remove item
       removeFromCart: (id) =>
         set((state) => ({
           cart: state.cart.filter((item) => item.id !== id),
         })),
 
-      // 🔄 Update quantity
       updateQuantity: (id, quantity) =>
         set((state) => ({
           cart: state.cart.map((item) =>
@@ -43,7 +42,6 @@ export const useCartStore = create(
           ),
         })),
 
-      // 🔁 Normalize DB cart → store
       setCartFromDB: (items) =>
         set({
           cart: items.map((item) => ({
@@ -53,11 +51,23 @@ export const useCartStore = create(
           })),
         }),
 
-      // 🧹 Clear cart
       clearCart: () => set({ cart: [] }),
     }),
     {
       name: "cart-storage",
+
+      // 🔥 THIS IS THE KEY
+      partialize: (state) => {
+        const { status } = useAuthStore.getState();
+
+        // Persist ONLY for guest users
+        if (status === "guest") {
+          return { cart: state.cart };
+        }
+
+        // Auth users → do NOT persist cart
+        return {};
+      },
     }
   )
 );

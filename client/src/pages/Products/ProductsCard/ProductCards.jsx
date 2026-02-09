@@ -1,15 +1,14 @@
 import React from "react";
 import { Star, Heart, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useCartStore } from "@/store/useCartStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
+import { addToCartAction } from "@/service/cart.action";
+import { toggleWishlistAction } from "@/service/wishlist.action";
 import { formatPrice } from "@/utils/formatPrice";
 function ProductCard({ products }) {
   const navigate = useNavigate();
   const inStock =  products.stock > 0;
-  
-  const { addToCart } = useCartStore();
-  const { toggleWishlist, isWishlisted } = useWishlistStore();
+  const {isWishlisted } = useWishlistStore();
   return (
     <div
       onClick={() => navigate(`/products/${products.id}`)}
@@ -21,7 +20,7 @@ function ProductCard({ products }) {
       <button
         onClick={(e) => {
           e.stopPropagation();
-          toggleWishlist(products);
+          toggleWishlistAction(products);
         }}
         className={`absolute top-3 right-3 z-2 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-full shadow-md transition-colors ${
           isWishlisted(products.id)
@@ -63,7 +62,7 @@ function ProductCard({ products }) {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                addToCart(products);
+                addToCartAction(products);
               }}
               className="flex w-full items-center justify-center gap-2
                        rounded-xl bg-black py-2 text-sm text-white"
@@ -122,7 +121,7 @@ function ProductCard({ products }) {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              addToCart(products);
+              addToCartAction(products);
             }}
             className="flex w-full items-center justify-center gap-2
                      rounded-xl bg-black py-2 text-sm text-white"

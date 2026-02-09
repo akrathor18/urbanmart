@@ -14,7 +14,6 @@ import {
 import ProductCards from "@/pages/Products/ProductsCard/ProductCards.jsx";
 import ErrorState from "@/components/ErrorState";
 import ProductNotFound from "./ProductNotFound/ProductNotFound";
-import { useCartStore } from "@/store/useCartStore";
 import { useProductStore } from "@/store/useProductStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { formatPrice } from "@/utils/formatPrice";

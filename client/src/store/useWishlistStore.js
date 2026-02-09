@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export const useWishlistStore = create(
   persist(
@@ -39,18 +40,35 @@ export const useWishlistStore = create(
         });
       },
 
-      isWishlisted: (id) => {
-        return get().wishlistIds.has(id);
-      },
+      isWishlisted: (id) => get().wishlistIds.has(id),
+
+      // 🔁 DB → store
+      setWishlistFromDB: (items) =>
+        set({
+          wishlist: items,
+          wishlistIds: new Set(items.map((i) => i.id)),
+        }),
+
+      clearWishlist: () =>
+        set({ wishlist: [], wishlistIds: new Set() }),
     }),
     {
       name: "wishlist-storage",
 
-      // 👇 THIS IS THE IMPORTANT PART
-      partialize: (state) => ({
-        wishlist: state.wishlist,
-        wishlistIds: Array.from(state.wishlistIds),
-      }),
+      // 🔥 ONLY persist for guest users
+      partialize: (state) => {
+        const { status } = useAuthStore.getState();
+
+        if (status === "guest") {
+          return {
+            wishlist: state.wishlist,
+            wishlistIds: Array.from(state.wishlistIds),
+          };
+        }
+
+        // auth users → no persistence
+        return {};
+      },
 
       onRehydrateStorage: () => (state) => {
         state.wishlistIds = new Set(state.wishlistIds || []);
