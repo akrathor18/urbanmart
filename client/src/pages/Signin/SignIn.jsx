@@ -5,22 +5,24 @@ import { User, Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { validationRules } from "@/utils/validation.js";
 import { useAuthStore } from "@/store/useAuthStore";
 import { syncUserDataAfterAuth } from "@/utils/syncUserData";
-/* ---------------- DEMO CREDENTIALS ---------------- */
+
 const DEMO_CREDENTIALS = {
   email: "demo@example.com",
   password: "demo123",
 };
 
 export default function Signin() {
-   const { signIn, isSigning, status } = useAuthStore();
+  const { signIn, isSigning, status } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
-useEffect(() => {
+
+  useEffect(() => {
     if (status === "authenticated") {
       navigate("/account", { replace: true });
     }
   }, [status, navigate]);
+
   const from = location.state?.from?.pathname || "/account";
 
   const {
@@ -35,17 +37,18 @@ useEffect(() => {
     },
   });
 
-  /* ---------------- NORMAL LOGIN ---------------- */
-   const onSubmit = async (data) => {
+  /* ✅ FIX #1: Add await, FIX #2: await sync */
+  const onSubmit = async (data) => {
     const success = await signIn(data);
     if (success) {
-      syncUserDataAfterAuth()
+      await syncUserDataAfterAuth(); // ✅ Wait for migration to complete
       navigate(from, { replace: true });
     }
   };
 
-   const handleDemoLogin = async () => {
-    const success = await signIn({  
+  /* ✅ FIX #3: Add migration to demo login */
+  const handleDemoLogin = async () => {
+    const success = await signIn({
       email: DEMO_CREDENTIALS.email,
       password: DEMO_CREDENTIALS.password,
     });
@@ -80,11 +83,12 @@ useEffect(() => {
             disabled={isSigning}
             className="w-full mb-6 p-3 border border-blue-200 rounded-lg bg-blue-50 hover:bg-blue-100 transition text-left"
           >
-                        <p className="text-xs sm:text-sm text-blue-800 font-medium mb-2">Quick Demo Login:</p>
-
+            <p className="text-xs sm:text-sm text-blue-800 font-medium mb-2">
+              Quick Demo Login:
+            </p>
             <div className="font-medium text-gray-900">Demo User</div>
             <div className="text-sm text-gray-600">
-              {DEMO_CREDENTIALS.email } · demo123
+              {DEMO_CREDENTIALS.email} · demo123
             </div>
           </button>
 
@@ -152,7 +156,7 @@ useEffect(() => {
 
           {/* Signup */}
           <p className="text-center text-sm text-gray-600 mt-6">
-            Don’t have an account?{" "}
+            Don't have an account?{" "}
             <Link to="/signup" className="text-blue-600 font-medium">
               Sign up
             </Link>

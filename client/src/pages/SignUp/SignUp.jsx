@@ -5,7 +5,6 @@ import {
   User,
   Mail,
   Lock,
-  Phone,
   Eye,
   EyeOff,
   ArrowLeft,
@@ -13,17 +12,19 @@ import {
 import { validationRules } from "@/utils/validation.js";
 import { useAuthStore } from "@/store/useAuthStore";
 import { syncUserDataAfterAuth } from "@/utils/syncUserData";
+
 export default function Signup() {
   const { signUp, isSigning, status } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/account";
 
-useEffect(() => {
+  useEffect(() => {
     if (status === "authenticated") {
       navigate("/account", { replace: true });
     }
   }, [status, navigate]);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -46,11 +47,11 @@ useEffect(() => {
 
   const password = watch("password");
 
-  /* ---------------- SUBMIT ---------------- */
+  /* ✅ FIX: Add await to signUp, await sync */
   const onSubmit = async (data) => {
-    const success = signUp(data);
+    const success = await signUp(data); // ✅ Wait for signup
     if (success) {
-      syncUserDataAfterAuth()
+      await syncUserDataAfterAuth(); // ✅ Wait for migration
       navigate(from, { replace: true });
     }
   };
@@ -121,6 +122,7 @@ useEffect(() => {
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
             </div>
+
             {/* Password */}
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
