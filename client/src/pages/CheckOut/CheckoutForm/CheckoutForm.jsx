@@ -3,11 +3,20 @@ import { useCartStore } from "@/store/useCartStore";
 import ShippingInfo from "../ShippingInfo/ShippingInfo.jsx";
 import ShippingMethod from "../ShippingMethod/ShippingMethod.jsx";
 import PaymentMethod from "../PaymentMethod/PaymentMethod.jsx";
+import CheckoutFormSkeleton from "../CheckoutFormSkeleton/CheckoutFormSkeleton.jsx";
 import CardInfo from "../CardInfo/CardInfo.jsx";
 import { mapCartToOrderPayload } from "@/utils/mapPlayload.js";
 import { useOrderStore } from "@/store/useOderStore.js";
+import { useUserStore } from "@/store/useUserStore.js";
+import { useEffect } from "react";
 export default function CheckoutForm({ onOrderComplete }) {
   const { placeOder, isPlacingOrder } = useOrderStore();
+  const { user, getProfile, loading } = useUserStore();
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
   const cart = useCartStore((s) => s.cart);
   const { clearCart } = useCartStore();
   const {
@@ -15,6 +24,7 @@ export default function CheckoutForm({ onOrderComplete }) {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
@@ -23,6 +33,25 @@ export default function CheckoutForm({ onOrderComplete }) {
       shippingMethod: "standard",
     },
   });
+
+  useEffect(() => {
+    if (user) {
+      reset({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        address: user.address.line1 || "",
+        city: user.address.city || "",
+        state: user.address.state || "",
+        zipCode: user.address.pincode || "",
+      });
+    }
+  }, [user, reset]);
+
+  if (loading) {
+    return <CheckoutFormSkeleton/>;
+  }
 
   const paymentMethod = watch("paymentMethod");
   const shippingMethod = watch("shippingMethod");
@@ -44,10 +73,10 @@ export default function CheckoutForm({ onOrderComplete }) {
       formData: data,
     });
 
-    const success = placeOder(payload);
+    const success = await placeOder(payload);
     if (success) {
-      clearCart();
       onOrderComplete();
+      clearCart();
     }
   };
 

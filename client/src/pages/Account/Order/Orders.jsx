@@ -11,17 +11,11 @@ function Orders() {
   useEffect(() => {
     getOders();
   }, []);
-  
+
   if (loading) {
     return <OrderListSkeleton />;
   }
 
-  
-  if (error) {
-    return <ErrorState message={error} />;
-  }
-
-  
   if (orders.length === 0) {
     return (
       <div className="text-center py-8">
@@ -30,7 +24,9 @@ function Orders() {
       </div>
     );
   }
-
+  if (error) {
+    return <ErrorState message={error} />;
+  }
   return (
     <div>
       <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">

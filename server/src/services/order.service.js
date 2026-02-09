@@ -8,11 +8,11 @@ export const orderProducts = async ({ userId, items, address, payment }) => {
 
     //Validate all products + stock
     const products = await tx.product.findMany({
-      where: { id: { in: items.map(i => i.productId) } },
+      where: { id: { in: items.map((i) => i.productId) } },
     });
 
     for (const item of items) {
-      const product = products.find(p => p.id === item.productId);
+      const product = products.find((p) => p.id === item.productId);
 
       if (!product) throw new Error("Product not found");
       if (product.stock < item.quantity)
@@ -37,12 +37,12 @@ export const orderProducts = async ({ userId, items, address, payment }) => {
             city: address.city,
             state: address.state,
             pincode: address.pincode,
-            country: address.country|| "India",
+            country: address.country || "India",
           },
         },
         items: {
-          create: items.map(item => {
-            const product = products.find(p => p.id === item.productId);
+          create: items.map((item) => {
+            const product = products.find((p) => p.id === item.productId);
             return {
               productId: product.id,
               quantity: item.quantity,
@@ -57,19 +57,29 @@ export const orderProducts = async ({ userId, items, address, payment }) => {
       },
     });
 
-    // 3️⃣ Update stock
+    //  Update stock
     for (const item of items) {
-      const product = products.find(p => p.id === item.productId);
       await tx.product.update({
-        where: { id: product.id },
-        data: { stock: product.stock - item.quantity },
+        where: { id: item.productId },
+        data: {
+          stock: {
+            decrement: item.quantity,
+          },
+        },
       });
     }
+    // clear the cart items
+    await tx.cartItem.deleteMany({
+      where: {
+        cart: {
+          userId,
+        },
+      },
+    });
 
     return order;
   });
 };
-
 
 export const getUserOder = async (userId) => {
   if (!userId) {
@@ -77,30 +87,29 @@ export const getUserOder = async (userId) => {
   }
 
   const orders = await prisma.order.findMany({
-  where: { userId },
-  orderBy: { createdAt: "desc" },
-  select: {
-    id: true,
-    orderCode: true,
-    total: true,
-    status: true,
-    payment: true,
-    createdAt: true,
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      orderCode: true,
+      total: true,
+      status: true,
+      payment: true,
+      createdAt: true,
 
-    items: {
-      select: {
-        quantity: true,
-        product: {
-          select: {
-            name: true,
-            price:true,
+      items: {
+        select: {
+          quantity: true,
+          product: {
+            select: {
+              name: true,
+              price: true,
+            },
           },
         },
       },
     },
-  },
-});
-
+  });
 
   if (!orders || orders.length === 0) {
     throw new Error("No orders found for this user");
@@ -108,22 +117,21 @@ export const getUserOder = async (userId) => {
   return orders;
 };
 
-
-export const getOrderDetials = async (orderCode)=>{
-  if(!orderCode) {
-    throw new Error('OrderCode Required')
+export const getOrderDetials = async (orderCode) => {
+  if (!orderCode) {
+    throw new Error("OrderCode Required");
   }
- const order = await prisma.order.findUnique({
-  where: { orderCode },
-  include: {
-    address: true,
-    items: {
-      include: {
-        product: true,
+  const order = await prisma.order.findUnique({
+    where: { orderCode },
+    include: {
+      address: true,
+      items: {
+        include: {
+          product: true,
+        },
       },
     },
-  },
-});
+  });
 
-return order
-}
+  return order;
+};

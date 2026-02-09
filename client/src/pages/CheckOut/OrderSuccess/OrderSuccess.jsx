@@ -33,7 +33,7 @@ export default function OrderSuccess() {
           </button>
 
           <button
-            onClick={() => navigate("/account")}
+            onClick={() => navigate("/account/orders")}
             className="w-full border border-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-50 transition-colors"
           >
             View Order History
