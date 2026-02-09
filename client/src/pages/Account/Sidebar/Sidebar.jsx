@@ -2,15 +2,21 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { User, Package, LogOut, Settings } from "lucide-react";
 import React from "react";
 import { NavLink } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 function Sidebar({ user }) {
+  const navigate = useNavigate()
   const {logout}=useAuthStore()
   const navLinks = [
     { to: "./profile", label: "Profile", icon: User },
     { to: "./orders", label: "Orders", icon: Package },
     { to: "./settings", label: "Settings", icon: Settings },
   ];
+
+  const handleLogout= async()=>{
+    await logout()
+    navigate("/", { replace: true });
+  }
 
   return (
     <div className="lg:col-span-1">
@@ -43,7 +49,7 @@ function Sidebar({ user }) {
             </NavLink>
           ))}
           <button
-            onClick={()=>(logout())}
+            onClick={()=>(handleLogout())}
             className="w-full flex items-center px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-left text-red-600 hover:bg-red-50 transition-colors text-sm sm:text-base"
           >
             <LogOut className="h-4 w-4 sm:h-5 sm:w-5 mr-3" />

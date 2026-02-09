@@ -94,16 +94,27 @@ export const useAuthStore = create((set, get) => ({
   },
 
   // 🚪 Logout
-  logout: async () => {
-    try {
-      await api.post("/auth/logout");
-    } catch (error) {
-      // ignore
-    }
+ logout: async () => {
+  try {
+    await api.post("/auth/logout");
+  } catch (error) {
+    // ignore
+  }
 
-    set({
-      user: null,
-      status: "guest",
-    });
-  },
+  // 🔥 clear client state
+  const { clearCart } = (await import("@/store/useCartStore")).useCartStore.getState();
+  const { clearWishlist } = (await import("@/store/useWishlistStore")).useWishlistStore.getState();
+
+  clearCart();
+  clearWishlist();
+
+  localStorage.removeItem("cart-storage");
+  localStorage.removeItem("wishlist-storage");
+
+  set({
+    user: null,
+    status: "guest",
+  });
+},
+
 }));
