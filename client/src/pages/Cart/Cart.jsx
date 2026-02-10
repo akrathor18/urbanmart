@@ -6,13 +6,15 @@ import { formatPrice } from "@/utils/formatPrice";
 import EmptyCart from "./EmptyCart/EmptyCart";
 import CardCard from "./Cartcards/CardCard";
 
-import { removeFromCartAction, updateCartQtyAction } from "@/service/cart.action";
+import {
+  removeFromCartAction,
+  updateCartQtyAction,
+} from "@/service/cart.action";
 export default function Cart() {
   const { cart } = useCartStore();
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
- 
   if (cart.length === 0) {
     return <EmptyCart />;
   }
@@ -24,13 +26,18 @@ export default function Cart() {
         {/* Top Bar */}
         <div className="flex items-center justify-between mb-6 sm:mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Shopping Cart</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Shopping Cart
+            </h1>
             <p className="text-gray-600 mt-1 text-sm sm:text-base">
               {cart.length} item{cart.length !== 1 ? "s" : ""} in your cart
             </p>
           </div>
-          <Link to="/products" className="flex gap-2 text-black hover:gray-blue-700 font-medium text-sm sm:text-base">
-           <ArrowLeft/> Continue Shopping
+          <Link
+            to="/products"
+            className="flex gap-2 text-black hover:gray-blue-700 font-medium text-sm sm:text-base"
+          >
+            <ArrowLeft /> Continue Shopping
           </Link>
         </div>
 
@@ -42,19 +49,19 @@ export default function Cart() {
               const isMin = item.quantity <= 1;
 
               return (
-              <>
-                <CardCard
-                key={item.id}
-                  item={item}
-                  isMin={isMin}
-                  isMax={isMax}
-                  updateQuantity={updateCartQtyAction}
-                  removeFromCart={removeFromCartAction}
-                  formatPrice={formatPrice}
-                />
+                <>
+                  <CardCard
+                    key={item.id}
+                    item={item}
+                    isMin={isMin}
+                    isMax={isMax}
+                    updateQuantity={updateCartQtyAction}
+                    removeFromCart={removeFromCartAction}
+                    formatPrice={formatPrice}
+                  />
 
-                <hr />
-              </>
+                  <hr />
+                </>
               );
             })}
           </div>

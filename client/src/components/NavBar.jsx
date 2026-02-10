@@ -9,14 +9,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 export default function Navbar() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const { cart } = useCartStore();
+  const { cart, isCartOpen, setIsCartOpen } = useCartStore();
   const { status } = useAuthStore();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  
 
   const handleSearch = () => {
     if (!search.trim()) return;
@@ -207,22 +205,20 @@ export default function Navbar() {
               </NavLink>
 
               {/* Cart */}
-              <NavLink to="/cart">
-                {({ isActive }) => (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={`relative ${isActive ? "bg-neutral-100" : ""}`}
-                  >
-                    <ShoppingCart className="h-5 w-5 text-neutral-700" />
-                    {cart.length > 0 && (
-                      <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
-                        {cart.length}
-                      </span>
-                    )}
-                  </Button>
+
+              <Button
+                onClick={() => setIsCartOpen(!isCartOpen)}
+                variant="ghost"
+                size="icon"
+                className={`relative bg-neutral-100`}
+              >
+                <ShoppingCart className="h-5 w-5 text-neutral-700" />
+                {cart.length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+                    {cart.length}
+                  </span>
                 )}
-              </NavLink>
+              </Button>
             </div>
           </div>
 

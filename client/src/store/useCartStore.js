@@ -6,6 +6,11 @@ export const useCartStore = create(
   persist(
     (set) => ({
       cart: [],
+      isCartOpen: false,
+
+      setIsCartOpen: (value) => {
+        set({ isCartOpen: value });
+      },
 
       addToCart: (product, quantity = 1) =>
         set((state) => {
@@ -52,7 +57,7 @@ export const useCartStore = create(
     {
       name: "cart-storage",
 
-      // 🔥 THIS IS THE KEY
+      // THIS IS THE KEY
       partialize: (state) => {
         const { status } = useAuthStore.getState();
 

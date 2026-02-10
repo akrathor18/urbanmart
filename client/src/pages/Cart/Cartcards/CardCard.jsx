@@ -4,10 +4,16 @@ import { X, Plus, Minus, Heart } from "lucide-react";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { Link } from "react-router-dom";
 import { toggleWishlistAction } from "@/service/wishlist.action";
-function CardCard({ item, isMax, isMin, updateQuantity, removeFromCart, formatPrice }) {
-  const {isWishlisted } = useWishlistStore();
+function CardCard({
+  item,
+  isMax,
+  isMin,
+  updateQuantity,
+  removeFromCart,
+  formatPrice,
+}) {
+  const { isWishlisted } = useWishlistStore();
 
-  
   const wishlisted = isWishlisted(item.id);
   return (
     <div key={item.id} className="p-4 sm:p-6">
