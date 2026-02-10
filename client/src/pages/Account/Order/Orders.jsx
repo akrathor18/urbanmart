@@ -4,8 +4,10 @@ import { useEffect } from "react";
 import OrderListSkeleton from "./OrderListSkeleton/OrderListSkeleton";
 import ErrorState from "@/components/ErrorState";
 import { useOrderStore } from "@/store/useOderStore";
+import { useNavigate } from "react-router-dom";
 
 function Orders() {
+const navigate = useNavigate()
   const { getOders, orders, loading, error } = useOrderStore();
 
   useEffect(() => {
@@ -35,7 +37,8 @@ function Orders() {
 
       <div className="space-y-4 sm:space-y-6">
         {orders.map((order) => (
-          <div
+          <div  
+          onClick={()=> navigate(`./${order.orderCode}`)}
             key={order.orderCode}
             className="border border-gray-200 rounded-lg p-4 sm:p-6"
           >

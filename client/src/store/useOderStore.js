@@ -6,7 +6,9 @@ export const useOrderStore = create((set) => ({
   error: null,
   orders: [],
   isPlacingOrder: false,
-
+  loadingOrderDetail: false,
+  orderDetailError: null,
+  orderDetail: [],
   placeOder: async (playload) => {
     set({ isPlacingOrder: true, error: null });
     const promise = api.post("/orders", playload);
@@ -33,10 +35,22 @@ export const useOrderStore = create((set) => ({
     try {
       set({ loading: true, error: null });
       const res = await api.get("/orders");
-      set({orders: res, loading: false,    })
+      set({ orders: res, loading: false });
     } catch (error) {
       console.log(error);
       set({ error: error, loading: false });
+    }
+  },
+
+  getOrderDetails: async (id) => {
+    try {
+      set({ loadingOrderDetail: true, orderDetailError: null });
+      const orderDetail = await api.get(`/orders/${id}`);
+      console.log(orderDetail);
+      set({ orderDetail: orderDetail, loadingOrderDetail: false });
+    } catch (error) {
+      set({ loadingOrderDetail: false, orderDetailError: error });
+      console.log(error);
     }
   },
 }));

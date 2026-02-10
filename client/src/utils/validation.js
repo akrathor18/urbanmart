@@ -1,7 +1,7 @@
 // Validation schemas and helper functions
 export const validationRules = {
   email: {
-   required: "Email is required",
+    required: "Email is required",
     pattern: {
       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
       message: "Please enter a valid email address",
@@ -30,7 +30,7 @@ export const validationRules = {
     },
   },
   lastName: {
-   required: "Last name is required",
+    required: "Last name is required",
     minLength: {
       value: 2,
       message: "Last name must be at least 2 characters",
@@ -41,21 +41,21 @@ export const validationRules = {
     },
   },
   phone: {
-   
+    required: "phone is required",
     pattern: {
       value: /^[6-9]\d{9}$/,
       message: "Please enter a valid 10-digit Indian mobile number",
     },
   },
   address: {
-   
+    required: "Address is required",
     minLength: {
       value: 10,
       message: "Address must be at least 10 characters long",
     },
   },
   city: {
-   
+    required: "City is required",
     minLength: {
       value: 2,
       message: "City name must be at least 2 characters",
@@ -66,14 +66,14 @@ export const validationRules = {
     },
   },
   state: {
-  
+    required: "State is required",
     minLength: {
       value: 2,
       message: "State name must be at least 2 characters",
     },
   },
   zipCode: {
-
+    required: "PIN Code is required",
     pattern: {
       value: /^[1-9][0-9]{5}$/,
       message: "Please enter a valid 6-digit PIN code",
@@ -93,10 +93,13 @@ export const validationRules = {
       message: "Please enter expiry date in MM/YY format",
     },
     validate: (value) => {
-      const [month, year] = value.split("/")
-      const expiry = new Date(2000 + Number.parseInt(year), Number.parseInt(month) - 1)
-      const now = new Date()
-      return expiry > now || "Card has expired"
+      const [month, year] = value.split("/");
+      const expiry = new Date(
+        2000 + Number.parseInt(year),
+        Number.parseInt(month) - 1,
+      );
+      const now = new Date();
+      return expiry > now || "Card has expired";
     },
   },
   cvv: {
@@ -131,30 +134,29 @@ export const validationRules = {
       message: "Message must be at least 20 characters long",
     },
   },
-}
+};
 
 // Helper function to format card number
 export const formatCardNumber = (value) => {
-  const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "")
-  const matches = v.match(/\d{4,16}/g)
-  const match = (matches && matches[0]) || ""
-  const parts = []
+  const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
+  const matches = v.match(/\d{4,16}/g);
+  const match = (matches && matches[0]) || "";
+  const parts = [];
   for (let i = 0, len = match.length; i < len; i += 4) {
-    parts.push(match.substring(i, i + 4))
+    parts.push(match.substring(i, i + 4));
   }
   if (parts.length) {
-    return parts.join(" ")
+    return parts.join(" ");
   } else {
-    return v
+    return v;
   }
-}
+};
 
 // Helper function to format expiry date
 export const formatExpiryDate = (value) => {
-  const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "")
+  const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
   if (v.length >= 2) {
-    return v.substring(0, 2) + "/" + v.substring(2, 4)
+    return v.substring(0, 2) + "/" + v.substring(2, 4);
   }
-  return v
-}
-
+  return v;
+};

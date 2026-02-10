@@ -14,6 +14,7 @@ import CheckoutPage from "./CheckOut/CheckoutPage";
 import Profile from "./Account/Profile/Profile";
 import Orders from "./Account/Order/Orders";
 import Settings from "./Account/Settings/Settings";
+import OrderDetailsPage from "./Account/Order/OrderDetail/OrderDetail";
 
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -46,6 +47,7 @@ export default function Pages() {
             <Route index element={<Navigate to="profile" replace />} />
             <Route path="profile" element={<Profile />} />
             <Route path="orders" element={<Orders />} />
+            <Route path="orders/:id" element={<OrderDetailsPage />} />
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="/checkout" element={<CheckoutPage />} />
