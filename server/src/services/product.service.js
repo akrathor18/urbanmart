@@ -5,23 +5,44 @@ export const createProduct = async (productData) => {
     data: productData,
   });
 };
-const getAllProducts = async () => {
-  return await prisma.product.findMany({
-    include: {
-      category: true,
-    },
-  });
-};
-
 export const getProductsById = async (id) => {
-  return await prisma.product.findUnique({
-    where: {
-      id: id,
-    },
-    include: {
-      category: true,
-    },
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: { category: true },
   });
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  const relatedProducts = await prisma.product.findMany({
+    where: {
+      categoryId: product.categoryId,
+      NOT: { id: product.id },
+    },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      image: true,
+      inStock: true,
+      stock: true,
+      rating: true,
+      review: true,
+
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
+    take: 4,
+  });
+
+  return {
+    product,
+    relatedProducts,
+  };
 };
 export const getProductsByCategory = async (categoryId) => {
   return await prisma.product.findMany({
@@ -36,7 +57,7 @@ export const getProductsByCategory = async (categoryId) => {
 
 export const getFilteredProducts = async (filters) => {
   const {
-     search,
+    search,
     category,
     minPrice,
     maxPrice,
@@ -46,45 +67,44 @@ export const getFilteredProducts = async (filters) => {
     page = 1,
     limit = 12,
   } = filters;
-// Search (name, description, category)
- const where = {};
-if (search) {
-  where.OR = [
-    {
-      name: {
-        contains: search,
-        mode: "insensitive",
+  // Search (name, description, category)
+  const where = {};
+  if (search) {
+    where.OR = [
+      {
+        name: {
+          contains: search,
+          mode: "insensitive",
+        },
       },
-    },
-    {
-      description: {
-        contains: search,
-        mode: "insensitive",
+      {
+        description: {
+          contains: search,
+          mode: "insensitive",
+        },
       },
-    },
-    {
-      category: {
-        is: {
-          name: {
-            contains: search,
-            mode: "insensitive",
+      {
+        category: {
+          is: {
+            name: {
+              contains: search,
+              mode: "insensitive",
+            },
           },
         },
       },
-    },
-  ];
-}
+    ];
+  }
 
-if (category) {
-  where.category = {
-    is: {
-      name: {
-        in: category.split(","),
+  if (category) {
+    where.category = {
+      is: {
+        name: {
+          in: category.split(","),
+        },
       },
-    },
-  };
-}
-
+    };
+  }
 
   // Price
   if (minPrice || maxPrice) {
@@ -116,19 +136,29 @@ if (category) {
 
   const skip = (Number(page) - 1) * Number(limit);
 
- const [products, total] = await Promise.all([
-  prisma.product.findMany({
-    where,
-    orderBy,
-    skip,
-    take: Number(limit),
-    include: {
-      category: true,
-    },
-  }),
-  prisma.product.count({ where }),
-]);
-
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      orderBy,
+      skip,
+      take: Number(limit),
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        image: true,
+        stock: true,
+        rating: true,
+        review: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    }),
+    prisma.product.count({ where }),
+  ]);
 
   return {
     products,

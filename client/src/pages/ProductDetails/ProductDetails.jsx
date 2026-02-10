@@ -17,16 +17,15 @@ import ProductNotFound from "./ProductNotFound/ProductNotFound";
 import { useProductStore } from "@/store/useProductStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { formatPrice } from "@/utils/formatPrice";
-
 import { updateCartQtyAction } from "@/service/cart.action";
 import { toggleWishlistAction } from "@/service/wishlist.action";
 import { toast } from "react-toastify";
+import ProductDetailsSkeleton from "./SkeletonLoader/ProductDetailsSkeleton";
 export default function ProductDetail() {
   const { id } = useParams();
 
-  const fetchProducts = useProductStore((state) => state.fetchProducts);
   const product = useProductStore((state) => state.product); // selected product detail
-  const products = useProductStore((state) => state.products); //full product lits
+  const relatedProducts = useProductStore((state) => state.relatedProducts); // selected related product detail
   const loadingProduct = useProductStore((state) => state.loadingProduct);
   const error = useProductStore((state) => state.error);
   const fetchProductById = useProductStore((state) => state.fetchProductById);
@@ -35,18 +34,13 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   useEffect(() => {
-    fetchProducts();
     fetchProductById(id);
   }, [id, fetchProductById]);
   const inStock = product?.stock > 0 || 0;
 
   // Loading state
   if (loadingProduct) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Loading product...</p>
-      </div>
-    );
+    return <ProductDetailsSkeleton />;
   }
 
   if (!loadingProduct && !product) {
@@ -54,19 +48,11 @@ export default function ProductDetail() {
   }
 
   if (error) return <ErrorState />;
-
-  // Related products (safe category comparison)
-  const relatedProducts = products
-    ?.filter(
-      (p) => p.category?.id === product.category?.id && p.id !== product.id,
-    )
-    .slice(0, 4);
-
   const updateQuantity = (productId, quantity) => {
     const success = updateCartQtyAction(productId, quantity);
     if (success) {
       toast.dismiss();
-      toast.success("Added tp cart");
+      toast.success("Added to cart");
     }
   };
   return (

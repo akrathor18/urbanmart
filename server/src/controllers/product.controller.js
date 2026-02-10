@@ -42,12 +42,21 @@ export const getProductsByCategory = async (req, res) => {
 
 export const getProductsById = async (req, res) => {
   try {
-    const { id } =req.params;
+    const { id } = req.params;
 
-    const product = await productService.getProductsById( Number(id));
-    res.status(200).json(product)
+    const { product, relatedProducts } =
+      await productService.getProductsById(Number(id));
+
+    res.status(200).json({
+      success: true,
+      productDetails: product,
+      relatedProducts,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error || "Internal Server Error" });
+    console.error(error);
+    res.status(404).json({
+      success: false,
+      message: error.message || "Product not found",
+    });
   }
 };
