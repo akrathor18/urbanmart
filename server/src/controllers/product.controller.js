@@ -15,22 +15,24 @@ export const createProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const result = await productService.getFilteredProducts(req.query)
+    const result = await productService.getFilteredProducts(req.query);
 
-    res.status(200).json(result)
+    res.status(200).json(result);
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(500).json({
       message: "Failed to fetch products",
-    })
+    });
   }
-}
+};
 
 export const getProductsByCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
 
-    const product = await productService.getProductsByCategory(Number(categoryId));
+    const product = await productService.getProductsByCategory(
+      Number(categoryId),
+    );
     res.status(200).json({
       product,
     });
@@ -44,8 +46,9 @@ export const getProductsById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { product, relatedProducts } =
-      await productService.getProductsById(Number(id));
+    const { product, relatedProducts } = await productService.getProductsById(
+      Number(id),
+    );
 
     res.status(200).json({
       success: true,
