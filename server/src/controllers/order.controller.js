@@ -33,7 +33,7 @@ export const getOrderDetails = async (req, res) => {
   try {
     const { orderCode } = req.params;
     const orderDetail = await orderService.getOrderDetials(orderCode);
-    res.status(201).json(orderDetail);
+    res.status(200).json(orderDetail);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message || "Server Error" });

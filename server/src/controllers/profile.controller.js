@@ -4,7 +4,7 @@ export const getProfile = async (req, res) => {
   try {
     const userId = Number(req.user.id);
     const userProflie = await profileService.getProfile(userId);
-    res.status(201).json({message:'user found', user: userProflie});
+    res.status(200).json({message:'user found', user: userProflie});
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
