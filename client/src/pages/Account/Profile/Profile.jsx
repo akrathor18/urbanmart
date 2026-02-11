@@ -57,7 +57,7 @@ function Profile() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div className="max-w-5xl mx-auto">
       {/* Header */}
       <div className="bg-gradient-to-r from-slate-50 to-white border border-slate-200 rounded-2xl p-5 sm:p-6 mb-6 sm:mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
