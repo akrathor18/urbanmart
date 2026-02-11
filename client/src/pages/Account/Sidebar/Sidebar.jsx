@@ -3,6 +3,7 @@ import { User, Package, LogOut, Settings } from "lucide-react";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Sidebar({ user }) {
   const navigate = useNavigate()
@@ -14,8 +15,10 @@ function Sidebar({ user }) {
   ];
 
   const handleLogout= async()=>{
+    navigate("/");
     await logout()
-    navigate("/", { replace: true });
+    toast.dismiss()
+    toast.success("Logout successfully ")
   }
 
   return (
