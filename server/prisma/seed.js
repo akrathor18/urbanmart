@@ -12,24 +12,24 @@ export async function seedProduction() {
   await prisma.category.deleteMany();
   await prisma.user.deleteMany();
 
-const adminEmail = process.env.ADMIN_EMAIL;
-const adminPassword = process.env.ADMIN_PASSWORD;
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
 
-if (!adminEmail || !adminPassword) {
-  throw new Error("ADMIN_EMAIL or ADMIN_PASSWORD not set in environment");
-}
+  if (!adminEmail || !adminPassword) {
+    throw new Error("ADMIN_EMAIL or ADMIN_PASSWORD not set in environment");
+  }
 
-const hashedPassword = await bcrypt.hash(adminPassword, 10);
+  const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
-await prisma.user.create({
-  data: {
-    firstName: "Super",
-    lastName: "Admin",
-    email: adminEmail,
-    password: hashedPassword,
-    role: "ADMIN",
-  },
-});
+  await prisma.user.create({
+    data: {
+      firstName: "Super",
+      lastName: "Admin",
+      email: adminEmail,
+      password: hashedPassword,
+      role: "ADMIN",
+    },
+  });
   console.log("✅ Admin created");
 
   // 📂 Create Categories
@@ -275,13 +275,5 @@ await prisma.user.create({
 
   console.log("✅ Products seeded successfully");
   console.log("🎉 Seeding completed successfully");
+  await prisma.$disconnect();
 }
-
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
