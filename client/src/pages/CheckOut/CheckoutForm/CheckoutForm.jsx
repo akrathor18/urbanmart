@@ -41,10 +41,10 @@ export default function CheckoutForm({ onOrderComplete }) {
         lastName: user.lastName || "",
         email: user.email || "",
         phone: user.phone || "",
-        address: user.address.line1 || "",
-        city: user.address.city || "",
-        state: user.address.state || "",
-        zipCode: user.address.pincode || "",
+        address: user.address?.line1 || "",
+        city: user.address?.city || "",
+        state: user.address?.state || "",
+        zipCode: user.address?.pincode || "",
       });
     }
   }, [user, reset]);
