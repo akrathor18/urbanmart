@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
-async function main() {
+export async function seedProduction() {
   console.log("🌱 Seeding database...");
 
   // Clear data (order matters because of relations)
