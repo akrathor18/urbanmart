@@ -17,11 +17,13 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const { cart, isCartOpen, setIsCartOpen } = useCartStore();
+  const {wishlist} = useWishlistStore()
   const { status } = useAuthStore();
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,7 +31,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const cartItemCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-
+  const wishlistItemCount = wishlist.length || 0 
   const handleSearch = () => {
     if (!search.trim()) return;
     navigate(`/products?search=${encodeURIComponent(search)}`);
@@ -242,6 +244,11 @@ export default function Navbar() {
                           : "text-slate-700"
                       }`}
                     />
+                     {wishlistItemCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow-lg shadow-blue-600/30 animate-in zoom-in-50">
+                    {wishlistItemCount > 99 ? "99+" : wishlistItemCount}
+                  </span>
+                )}
                   </Button>
                 )}
               </NavLink>

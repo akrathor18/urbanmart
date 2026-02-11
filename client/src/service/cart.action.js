@@ -14,26 +14,28 @@ export const addToCartAction = async (product, quantity = 1) => {
   // GUEST USER
   if (status === "guest") {
     cartStore.addToCart(product, quantity);
-    toast.success('Added to Cart!')
+    toast.success("Added to Cart!");
     return;
   }
 
   // AUTH USER
   try {
+    //  Optimistic update (instant UI)
+    cartStore.addToCart(product, quantity);
+    toast.dismiss()
+    toast.success("Added to Cart!");
+
+    // Sync with server (background)
     await api.post("/cart/add", {
       productId: product.id,
     });
-
-    const res = await api.get("/cart");
-    cartStore.setCartFromDB(res.items);
-    toast.success('Added to Cart!')
-
   } catch (error) {
-    toast.dismiss()
-    console.log(error)
-     toast.error(
-      error || "Unable to add product"
-    );
+    console.log(error);
+
+    // Optional rollback
+    cartStore.removeFromCart(product.id);
+
+    toast.error(error || "Unable to add product");
   }
 };
 
@@ -41,33 +43,29 @@ export const updateCartQtyAction = async (productId, quantity) => {
   const { status } = useAuthStore.getState();
   const cartStore = useCartStore.getState();
 
-  if (status === "loading") {
-    return;
-  }
+  if (status === "loading") return;
 
-  // GUEST USER
-  if (status === "guest") {
-    cartStore.updateQuantity(productId, quantity);
-    return;
-  }
+  // 1️⃣ Optimistic update (instant UI)
+  cartStore.updateQuantity(productId, quantity);
 
-  // AUTH USER
+  if (status === "guest") return;
+
   try {
+    // 2️⃣ Sync with backend
     await api.patch("/cart/item", {
       productId,
       quantity,
     });
+  } catch (error) {
+    console.log(error);
 
-    const res = await api.get("/cart");
-    cartStore.setCartFromDB(res.items);
-  }  catch (error) {
-    console.log(error)
-    toast.dismiss()
-     toast.error(
-      error || "Unable to add product"
-    );
+    // 3️⃣ Rollback (optional but recommended)
+    cartStore.syncFromServer?.(); // or refetch cart once
+
+    toast.error(error || "Unable to update quantity");
   }
 };
+
 
 export const removeFromCartAction = async (productId) => {
   const { status } = useAuthStore.getState();
