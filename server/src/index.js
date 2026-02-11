@@ -36,26 +36,6 @@ app.use("/orders", orderRoutes);
 app.use("/user", profileRoutes);
 app.use("/cart", cartRoutes);
 app.use("/wishlist", wishlistRoutes);
-//  temp seeding route
-import { seedProduction } from "../prisma/seed.js";
-
-app.post("/internal/seed", async (req, res) => {
-  const secret = req.headers["x-seed-secret"];
-
-  if (secret !== process.env.SEED_SECRET) {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
-  try {
-    await seedProduction();
-    res.json({ message: "Database seeded successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Seeding failed" });
-  }
-});
-
-
 
 // deployment
 app.get("/health", (req, res) => {
