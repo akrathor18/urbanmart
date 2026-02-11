@@ -8,10 +8,12 @@ export const register = async (req, res) => {
       email: user.email,
       role: user.role,
     });
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    });
+   res.cookie("token", token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+});
+
     res.status(201).json({
       message: "User registered successfully",
       token,
@@ -30,10 +32,12 @@ export const login = async (req, res) => {
       email: user.email,
       role: user.role,
     });
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    });
+   res.cookie("token", token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+});
+
     res.status(200).json({
       message: "Login successful",
       token,
