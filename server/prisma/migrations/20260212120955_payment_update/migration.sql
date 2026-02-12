@@ -2,10 +2,10 @@
 CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
 -- CreateEnum
-CREATE TYPE "PAYMENT_METHOD" AS ENUM ('COD', 'UPI', 'CARD', 'NET_BANKING');
+CREATE TYPE "ORDER_STATUS" AS ENUM ('CREATED', 'PENDING_PAYMENT', 'PAID', 'FAILED', 'EXPIRED', 'SHIPPED', 'DELIVERED', 'CANCELED');
 
 -- CreateEnum
-CREATE TYPE "STATUS" AS ENUM ('PENDING', 'SHIPPED', 'DELIVERED', 'CANCELED');
+CREATE TYPE "PAYMENT_METHOD" AS ENUM ('COD', 'RAZORPAY');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -75,12 +75,18 @@ CREATE TABLE "WishlistItem" (
 -- CreateTable
 CREATE TABLE "Order" (
     "id" SERIAL NOT NULL,
-    "orderCode" TEXT,
+    "orderCode" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
-    "total" DOUBLE PRECISION NOT NULL,
-    "status" "STATUS" NOT NULL DEFAULT 'PENDING',
+    "totalAmount" INTEGER NOT NULL,
+    "status" "ORDER_STATUS" NOT NULL DEFAULT 'CREATED',
+    "paymentMethod" "PAYMENT_METHOD" NOT NULL,
+    "razorpayOrderId" TEXT,
+    "razorpayPaymentId" TEXT,
+    "razorpaySignature" TEXT,
+    "paidAt" TIMESTAMP(3),
+    "expiresAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "payment" "PAYMENT_METHOD" NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
@@ -107,7 +113,7 @@ CREATE TABLE "OrderItem" (
     "orderId" INTEGER NOT NULL,
     "productId" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
+    "price" INTEGER NOT NULL,
 
     CONSTRAINT "OrderItem_pkey" PRIMARY KEY ("id")
 );
@@ -127,14 +133,14 @@ CREATE TABLE "Product" (
     "image" TEXT NOT NULL,
     "images" TEXT[],
     "description" TEXT NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
+    "price" INTEGER NOT NULL,
     "stock" INTEGER NOT NULL,
-    "inStock" BOOLEAN NOT NULL,
-    "categoryId" INTEGER NOT NULL,
     "rating" INTEGER NOT NULL,
     "review" INTEGER NOT NULL,
     "features" TEXT[],
+    "categoryId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
@@ -159,6 +165,9 @@ CREATE UNIQUE INDEX "WishlistItem_wishlistId_productId_key" ON "WishlistItem"("w
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Order_orderCode_key" ON "Order"("orderCode");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Order_razorpayOrderId_key" ON "Order"("razorpayOrderId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "OrderAddress_orderId_key" ON "OrderAddress"("orderId");

@@ -7,7 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// user model with cart and wishlist
+//////////////////////
+// ENUMS
+//////////////////////
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ORDER_STATUS {
+  CREATED
+  PENDING_PAYMENT
+  PAID
+  FAILED
+  EXPIRED
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
+
+enum PAYMENT_METHOD {
+  COD
+  RAZORPAY
+}
+
+//////////////////////
+// USER
+//////////////////////
+
 model User {
   id        Int       @id @default(autoincrement())
   firstName String
@@ -16,20 +44,20 @@ model User {
   password  String
   role      Role      @default(USER)
   phone     String?
+
   cart      Cart?
   wishlist  Wishlist?
   orders    Order[]
   addresses Address[]
 }
 
-enum Role {
-  USER
-  ADMIN
-}
+//////////////////////
+// ADDRESS
+//////////////////////
 
 model Address {
-  id     Int @id @default(autoincrement())
-  userId Int
+  id       Int @id @default(autoincrement())
+  userId   Int
 
   fullName String
   phone    String?
@@ -47,16 +75,18 @@ model Address {
   @@unique([userId, isDefault])
 }
 
-// cart model with cart items
+//////////////////////
+// CART
+//////////////////////
+
 model Cart {
   id     Int  @id @default(autoincrement())
   userId Int  @unique
-  user   User @relation(fields: [userId], references: [id])
 
+  user  User       @relation(fields: [userId], references: [id])
   items CartItem[]
 }
 
-// cart item model linking cart and product
 model CartItem {
   id        Int @id @default(autoincrement())
   cartId    Int
@@ -69,12 +99,15 @@ model CartItem {
   @@unique([cartId, productId])
 }
 
-// whishlist model linking user and product
+//////////////////////
+// WISHLIST
+//////////////////////
+
 model Wishlist {
   id     Int  @id @default(autoincrement())
   userId Int  @unique
-  user   User @relation(fields: [userId], references: [id])
 
+  user  User          @relation(fields: [userId], references: [id])
   items WishlistItem[]
 }
 
@@ -89,20 +122,38 @@ model WishlistItem {
   @@unique([wishlistId, productId])
 }
 
-// oder model
+//////////////////////
+// ORDER
+//////////////////////
 
 model Order {
-  id        Int            @id @default(autoincrement())
-  orderCode String?   @unique
-  userId    Int
-  total     Float
-  status    STATUS         @default(PENDING)
-  createdAt DateTime       @default(now())
-  payment   PAYMENT_METHOD
-  user      User           @relation(fields: [userId], references: [id])
+  id                Int           @id @default(autoincrement())
+  orderCode         String        @unique
+  userId            Int
+
+  totalAmount       Int           // Stored in paise (VERY IMPORTANT)
+  status            ORDER_STATUS  @default(CREATED)
+  paymentMethod     PAYMENT_METHOD
+
+  // Razorpay Tracking
+  razorpayOrderId   String?       @unique
+  razorpayPaymentId String?
+  razorpaySignature String?
+
+  paidAt            DateTime?
+  expiresAt         DateTime?
+
+  createdAt         DateTime      @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  user      User          @relation(fields: [userId], references: [id])
   items     OrderItem[]
   address   OrderAddress?
 }
+
+//////////////////////
+// ORDER ADDRESS
+//////////////////////
 
 model OrderAddress {
   id      Int @id @default(autoincrement())
@@ -120,12 +171,17 @@ model OrderAddress {
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
+//////////////////////
+// ORDER ITEMS
+//////////////////////
+
 model OrderItem {
-  id        Int   @id @default(autoincrement())
+  id        Int @id @default(autoincrement())
   orderId   Int
   productId Int
+
   quantity  Int
-  price     Float
+  price     Int   // snapshot price in paise
 
   order   Order   @relation(fields: [orderId], references: [id])
   product Product @relation(fields: [productId], references: [id])
@@ -133,44 +189,40 @@ model OrderItem {
   @@unique([orderId, productId])
 }
 
-enum PAYMENT_METHOD {
-  COD
-  UPI
-  CARD
-  NET_BANKING
-}
+//////////////////////
+// CATEGORY
+//////////////////////
 
-enum STATUS {
-  PENDING
-  SHIPPED
-  DELIVERED
-  CANCELED
-}
-
-// Category and Product models
 model Category {
   id       Int       @id @default(autoincrement())
   name     String    @unique
   products Product[]
 }
 
+//////////////////////
+// PRODUCT
+//////////////////////
+
 model Product {
-  id            Int            @id @default(autoincrement())
-  name          String
-  image         String
-  images        String[]
-  description   String
-  price         Float
-  stock         Int
-  inStock       Boolean
-  categoryId    Int
-  rating        Int
-  review        Int
-  features      String[]
-  category      Category       @relation(fields: [categoryId], references: [id])
+  id          Int      @id @default(autoincrement())
+  name        String
+  image       String
+  images      String[]
+  description String
+
+  price       Int      // stored in paise
+  stock       Int
+  rating      Int
+  review      Int
+  features    String[]
+
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+
   cartItems     CartItem[]
   wishlistItems WishlistItem[]
-  OrderItem     OrderItem[]
+  orderItems    OrderItem[]
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
