@@ -26,8 +26,14 @@ export const orderProducts = async ({ userId, items, address, payment }) => {
       data: {
         orderCode: generateOrderCode(),
         userId,
-        payment,
-        total,
+        paymentMethod: payment,
+        totalAmount: total,
+
+        status: payment === "COD" ? "PAID" : "CREATED",
+
+        expiresAt:
+          payment === "RAZORPAY" ? new Date(Date.now() + 15 * 60 * 1000) : null,
+
         address: {
           create: {
             fullName: address.fullName,
@@ -40,33 +46,32 @@ export const orderProducts = async ({ userId, items, address, payment }) => {
             country: address.country || "India",
           },
         },
+
         items: {
           create: items.map((item) => {
             const product = products.find((p) => p.id === item.productId);
             return {
               productId: product.id,
               quantity: item.quantity,
-              price: product.price,
+              price: product.price, // snapshot price in paise
             };
           }),
         },
       },
-      include: {
-        items: { include: { product: true } },
-        address: true,
-      },
     });
 
-    //  Update stock
-    for (const item of items) {
-      await tx.product.update({
-        where: { id: item.productId },
-        data: {
-          stock: {
-            decrement: item.quantity,
+    //  Update stock if payment method is COD
+    if (payment === "COD") {
+      for (const item of items) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: {
+            stock: {
+              decrement: item.quantity,
+            },
           },
-        },
-      });
+        });
+      }
     }
     // clear the cart items
     await tx.cartItem.deleteMany({
