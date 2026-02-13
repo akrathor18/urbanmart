@@ -145,12 +145,12 @@ function Orders() {
                   <div className="flex items-baseline gap-1">
                     <span className="text-xs sm:text-sm text-slate-600">Total:</span>
                     <span className="text-lg sm:text-xl font-bold text-slate-900">
-                      {formatPrice(order.total)}
+                      {formatPrice(order.totalAmount)}
                     </span>
                   </div>
 
                   {/* Payment Method */}
-                  {order.payment === "COD" && (
+                  {order.paymentMethod === "COD" && (
                     <div className="flex items-center gap-1.5 text-xs sm:text-sm text-orange-600 font-medium bg-orange-50 px-2.5 py-1 rounded-lg border border-orange-200">
                       <CreditCard className="h-3.5 w-3.5 flex-shrink-0" />
                       Cash on Delivery

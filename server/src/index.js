@@ -8,6 +8,8 @@ import orderRoutes from "./routes/order.route.js";
 import profileRoutes from "./routes/profile.route.js";
 import cartRoutes from "./routes/cart.route.js";
 import wishlistRoutes from "./routes/wishlist.route.js";
+import paymentRoutes from "./routes/payment.route.js"
+
 import cookieParser from "cookie-parser";
 
 import cors from "cors";
@@ -36,6 +38,7 @@ app.use("/orders", orderRoutes);
 app.use("/user", profileRoutes);
 app.use("/cart", cartRoutes);
 app.use("/wishlist", wishlistRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // deployment
 app.get("/health", (req, res) => {

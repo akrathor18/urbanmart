@@ -32,7 +32,7 @@ export const getUserOder = async (req, res) => {
 export const getOrderDetails = async (req, res) => {
   try {
     const { orderCode } = req.params;
-    const orderDetail = await orderService.getOrderDetials(orderCode);
+    const orderDetail = await orderService.getOrderDetails(orderCode);
     res.status(200).json(orderDetail);
   } catch (error) {
     console.log(error);

@@ -90,7 +90,7 @@ function OrderDetailsPage({ onBack }) {
   const StatusIcon = currentStatus.icon;
 
   // Calculate pricing breakdown
-  const subtotal = orderDetail?.total || 0;
+  const subtotal = orderDetail?.totalAmount || 0;
   const shipping = orderDetail?.shippingCost || 0;
   const tax = orderDetail?.tax || 0;
   const discount = orderDetail?.discount || 0;
@@ -237,7 +237,7 @@ function OrderDetailsPage({ onBack }) {
                 Payment Method
               </span>
               <span className="font-semibold text-slate-900 text-sm sm:text-base text-right">
-                {orderDetail?.payment || "N/A"}
+                {orderDetail?.paymentMethod || "N/A"}
               </span>
             </div>
             <div className="flex items-center justify-between gap-4 pt-3 border-t border-slate-100">
@@ -245,7 +245,7 @@ function OrderDetailsPage({ onBack }) {
                 Total Amount
               </span>
               <span className="font-bold text-slate-900 text-base sm:text-lg">
-                ₹{orderDetail?.total?.toLocaleString("en-IN") || "0"}
+                ₹{orderDetail?.totalAmount?.toLocaleString("en-IN") || "0"}
               </span>
             </div>
             {orderDetail?.paymentStatus && (
@@ -387,7 +387,7 @@ function OrderDetailsPage({ onBack }) {
             <div className="flex justify-between items-center">
               <span className="text-base sm:text-lg font-semibold">Total</span>
               <span className="text-xl sm:text-2xl font-bold">
-                ₹{orderDetail?.total?.toLocaleString("en-IN") || "0"}
+                ₹{orderDetail?.totalAmount?.toLocaleString("en-IN") || "0"}
               </span>
             </div>
           </div>

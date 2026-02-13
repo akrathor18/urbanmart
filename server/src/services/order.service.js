@@ -92,29 +92,29 @@ export const getUserOder = async (userId) => {
   }
 
   const orders = await prisma.order.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      orderCode: true,
-      total: true,
-      status: true,
-      payment: true,
-      createdAt: true,
-
-      items: {
-        select: {
-          quantity: true,
-          product: {
-            select: {
-              name: true,
-              price: true,
-            },
+  where: { userId },
+  orderBy: { createdAt: "desc" },
+  select: {
+    id: true,
+    orderCode: true,
+    totalAmount: true,
+    status: true,
+    paymentMethod: true,
+    createdAt: true,
+    items: {
+      select: {
+        quantity: true,
+        product: {
+          select: {
+            name: true,
+            price: true,
           },
         },
       },
     },
-  });
+  },
+});
+
 
   if (!orders || orders.length === 0) {
     throw new Error("No orders found for this user");
@@ -122,7 +122,7 @@ export const getUserOder = async (userId) => {
   return orders;
 };
 
-export const getOrderDetials = async (orderCode) => {
+export const getOrderDetails = async (orderCode) => {
   if (!orderCode) {
     throw new Error("OrderCode Required");
   }
