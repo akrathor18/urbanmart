@@ -1,4 +1,4 @@
-export default function ShippingMethod({ register, subtotal }) {
+export default function ShippingMethod({ register}) {
   return (
     <section>
       <h2 className="text-lg font-semibold mb-4">Shipping Method</h2>

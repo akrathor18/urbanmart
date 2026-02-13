@@ -4,13 +4,13 @@ import ShippingInfo from "../ShippingInfo/ShippingInfo.jsx";
 import ShippingMethod from "../ShippingMethod/ShippingMethod.jsx";
 import PaymentMethod from "../PaymentMethod/PaymentMethod.jsx";
 import CheckoutFormSkeleton from "../CheckoutFormSkeleton/CheckoutFormSkeleton.jsx";
-import CardInfo from "../CardInfo/CardInfo.jsx";
 import { mapCartToOrderPayload } from "@/utils/mapPlayload.js";
 import { useOrderStore } from "@/store/useOderStore.js";
 import { useUserStore } from "@/store/useUserStore.js";
 import { useEffect } from "react";
 import { createPayment, verifyPayment } from "@/service/payment.service";
 import { loadRazorpayScript } from "@/utils/loadRazorpay";
+import { formatPrice } from "@/utils/formatPrice.js";
 
 export default function CheckoutForm({ onOrderComplete }) {
   const { placeOder, isPlacingOrder } = useOrderStore();
@@ -32,7 +32,7 @@ export default function CheckoutForm({ onOrderComplete }) {
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      paymentMethod: "card",
+      paymentMethod: "RAZORPAY",
       shippingMethod: "standard",
     },
   });
@@ -53,34 +53,34 @@ export default function CheckoutForm({ onOrderComplete }) {
   }, [user, reset]);
 
   if (loading) {
-    return <CheckoutFormSkeleton/>;
+    return <CheckoutFormSkeleton />;
   }
-const handleRazorpayPayment = async (orderCode) => {
-  const scriptLoaded = await loadRazorpayScript();
-  if (!scriptLoaded) {
-    alert("Razorpay failed to load");
-    return;
-  }
+  const handleRazorpayPayment = async (orderCode) => {
+    const scriptLoaded = await loadRazorpayScript();
+    if (!scriptLoaded) {
+      alert("Razorpay failed to load");
+      return;
+    }
 
-  const { data } = await createPayment(orderCode);
+    const {data} = await createPayment(orderCode);
+    console.log(data)
+    const options = {
+      key: data.key,
+      amount: data.amount,
+      currency: data.currency,
+      order_id: data.razorpayOrderId,
 
-  const options = {
-    key: data.data.key,
-    amount: data.data.amount,
-    currency: data.data.currency,
-    order_id: data.data.razorpayOrderId,
+      handler: async function (response) {
+        await verifyPayment(response);
 
-    handler: async function (response) {
-      await verifyPayment(response);
+        clearCart();
+        onOrderComplete(orderCode);
+      },
+    };
 
-      clearCart();
-      onOrderComplete(orderCode);
-    },
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
-
-  const rzp = new window.Razorpay(options);
-  rzp.open();
-};
 
   const paymentMethod = watch("paymentMethod");
   const shippingMethod = watch("shippingMethod");
@@ -90,35 +90,28 @@ const handleRazorpayPayment = async (orderCode) => {
     0,
   );
 
-  const shipping =
-    shippingMethod === "express" ? 1329 : subtotal > 4000 ? 0 : 829;
-
-  const tax = Math.round(subtotal * 0.18);
-  const total = subtotal + shipping + tax;
-
   const onSubmit = async (data) => {
-  const payload = mapCartToOrderPayload({
-    cart,
-    formData: data,
-  });
+    const payload = mapCartToOrderPayload({
+      cart,
+      formData: data,
+    });
 
-  const order = await placeOder(payload);
+    const order = await placeOder(payload);
+console.log(order)
+    if (!order) return;
 
-  if (!order) return;
+    // COD flow
+    if (data.paymentMethod === "cod") {
+      onOrderComplete(order.orderCode);
+      clearCart();
+      return;
+    }
 
-  // COD flow
-  if (data.paymentMethod === "cod") {
-    onOrderComplete(order.orderCode);
-    clearCart();
-    return;
-  }
-
-  // Razorpay flow
-  if (data.paymentMethod === "card") {
-    await handleRazorpayPayment(order.orderCode);
-  }
-};
-
+    // Razorpay flow
+    if (data.paymentMethod === "RAZORPAY") {
+      await handleRazorpayPayment(order.orderCode);
+    }
+  };
 
   return (
     <form
@@ -128,11 +121,6 @@ const handleRazorpayPayment = async (orderCode) => {
       <ShippingInfo register={register} errors={errors} />
       <ShippingMethod register={register} subtotal={subtotal} />
       <PaymentMethod register={register} />
-
-      {paymentMethod === "card" && (
-        <CardInfo register={register} errors={errors} setValue={setValue} />
-      )}
-
       <button
         disabled={!isValid || isPlacingOrder}
         className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold disabled:bg-blue-400"
@@ -140,7 +128,7 @@ const handleRazorpayPayment = async (orderCode) => {
         {isPlacingOrder
           ? "Placing order..."
           : paymentMethod === "card"
-            ? `Pay ₹${total}`
+            ? `Pay ${formatPrice(subtotal)}`
             : "Place Order"}
       </button>
     </form>

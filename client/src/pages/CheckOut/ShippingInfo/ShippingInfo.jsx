@@ -1,5 +1,4 @@
 import { validationRules } from "@/utils/validation";
-
 export default function ShippingInfo({ register, errors }) {
   return (
     <div>

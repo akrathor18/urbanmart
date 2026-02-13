@@ -1,4 +1,6 @@
 import { useCartStore } from "@/store/useCartStore";
+import { formatPrice } from "@/utils/formatPrice";
+
 export default function OrderSummary() {
   const cart = useCartStore((s) => s.cart);
 
@@ -28,7 +30,7 @@ export default function OrderSummary() {
               </p>
             </div>
             <p className="font-medium text-xs sm:text-sm">
-              ₹ {item.price * item.quantity}
+              ₹ {item.price /100 * item.quantity}
             </p>
           </div>
         ))}
@@ -36,7 +38,7 @@ export default function OrderSummary() {
 
       <div className="border-t pt-4 flex justify-between font-semibold">
         <span>Total</span>
-        <span>₹ {total}</span>
+        <span>{formatPrice(total)}</span>
       </div>
     </div>
   );
