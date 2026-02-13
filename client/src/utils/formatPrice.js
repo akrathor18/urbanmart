@@ -1,3 +1,4 @@
 export const formatPrice = (amount) => {
-    return `₹ ${amount.toLocaleString("en-IN")}`;
+  const amountInRupee = amount/100
+    return `₹ ${amountInRupee.toLocaleString("en-IN")}`;
   };

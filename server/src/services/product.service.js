@@ -109,8 +109,8 @@ export const getFilteredProducts = async (filters) => {
   // Price
   if (minPrice || maxPrice) {
     where.price = {
-      gte: minPrice ? Number(minPrice) : 0,
-      lte: maxPrice ? Number(maxPrice) : 100000,
+      gte: minPrice ? Number(minPrice*100) : 0,
+      lte: maxPrice ? Number(maxPrice*100) : 100000,
     };
   }
 
