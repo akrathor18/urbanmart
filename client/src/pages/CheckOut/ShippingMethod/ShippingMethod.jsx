@@ -11,7 +11,7 @@ export default function ShippingMethod({ register, subtotal }) {
           defaultChecked
         />
         <span className="ml-2">
-          Standard — ₹ {subtotal > 4000 ? "Free" : 829}
+          Standard — ₹ Free
         </span>
       </label>
 

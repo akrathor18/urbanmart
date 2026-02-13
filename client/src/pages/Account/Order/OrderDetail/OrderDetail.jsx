@@ -16,6 +16,7 @@ import {
 import OrderDetailsSkeleton from "./OrderDetailsSkeleton/OrderDetailsSkeleton";
 import { useOrderStore } from "@/store/useOderStore";
 import { useParams } from "react-router-dom";
+import { formatPrice } from "@/utils/formatPrice";
 
 function OrderDetailsPage({ onBack }) {
   const { id } = useParams();
@@ -245,7 +246,7 @@ function OrderDetailsPage({ onBack }) {
                 Total Amount
               </span>
               <span className="font-bold text-slate-900 text-base sm:text-lg">
-                ₹{orderDetail?.totalAmount?.toLocaleString("en-IN") || "0"}
+                {formatPrice(orderDetail?.totalAmount||0)}
               </span>
             </div>
             {orderDetail?.paymentStatus && (
@@ -308,7 +309,7 @@ function OrderDetailsPage({ onBack }) {
                 </p>
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1.5">
                   <span className="text-xs sm:text-sm text-slate-500">
-                    ₹{item?.price?.toLocaleString("en-IN")} × {item?.quantity}
+                    {formatPrice(item?.price)} × {item?.quantity}
                   </span>
                   {item?.product?.sku && (
                     <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
@@ -321,8 +322,8 @@ function OrderDetailsPage({ onBack }) {
                   <p className="font-bold text-slate-900 text-base">
                     ₹
                     {(
-                      (item?.price || 0) * (item?.quantity || 0)
-                    ).toLocaleString("en-IN")}
+                      (formatPrice(item?.price) || 0) * (item?.quantity || 0)
+                    )}
                   </p>
                 </div>
               </div>
@@ -331,7 +332,7 @@ function OrderDetailsPage({ onBack }) {
               <div className="hidden sm:block text-right flex-shrink-0">
                 <p className="font-bold text-slate-900 text-lg">
                   ₹
-                  {((item?.price || 0) * (item?.quantity || 0)).toLocaleString(
+                  {((item?.price /100 || 0) * (item?.quantity || 0)).toLocaleString(
                     "en-IN",
                   )}
                 </p>
@@ -352,7 +353,7 @@ function OrderDetailsPage({ onBack }) {
           <div className="flex justify-between items-center text-slate-300 text-sm sm:text-base">
             <span>Subtotal</span>
             <span className="font-medium">
-              ₹{subtotal?.toLocaleString("en-IN")}
+              {formatPrice(subtotal)}
             </span>
           </div>
 
@@ -360,7 +361,7 @@ function OrderDetailsPage({ onBack }) {
             <div className="flex justify-between items-center text-slate-300 text-sm sm:text-base">
               <span>Shipping</span>
               <span className="font-medium">
-                ₹{shipping?.toLocaleString("en-IN")}
+              {formatPrice(shipping)}
               </span>
             </div>
           )}
@@ -369,7 +370,7 @@ function OrderDetailsPage({ onBack }) {
             <div className="flex justify-between items-center text-slate-300 text-sm sm:text-base">
               <span>Tax</span>
               <span className="font-medium">
-                ₹{tax?.toLocaleString("en-IN")}
+                {formatPrice(tax)}
               </span>
             </div>
           )}
@@ -387,7 +388,7 @@ function OrderDetailsPage({ onBack }) {
             <div className="flex justify-between items-center">
               <span className="text-base sm:text-lg font-semibold">Total</span>
               <span className="text-xl sm:text-2xl font-bold">
-                ₹{orderDetail?.totalAmount?.toLocaleString("en-IN") || "0"}
+               {formatPrice(orderDetail?.totalAmount)}
               </span>
             </div>
           </div>

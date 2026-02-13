@@ -9,6 +9,9 @@ import { mapCartToOrderPayload } from "@/utils/mapPlayload.js";
 import { useOrderStore } from "@/store/useOderStore.js";
 import { useUserStore } from "@/store/useUserStore.js";
 import { useEffect } from "react";
+import { createPayment, verifyPayment } from "@/service/payment.service";
+import { loadRazorpayScript } from "@/utils/loadRazorpay";
+
 export default function CheckoutForm({ onOrderComplete }) {
   const { placeOder, isPlacingOrder } = useOrderStore();
   const { user, getProfile, loading } = useUserStore();
@@ -52,6 +55,32 @@ export default function CheckoutForm({ onOrderComplete }) {
   if (loading) {
     return <CheckoutFormSkeleton/>;
   }
+const handleRazorpayPayment = async (orderCode) => {
+  const scriptLoaded = await loadRazorpayScript();
+  if (!scriptLoaded) {
+    alert("Razorpay failed to load");
+    return;
+  }
+
+  const { data } = await createPayment(orderCode);
+
+  const options = {
+    key: data.data.key,
+    amount: data.data.amount,
+    currency: data.data.currency,
+    order_id: data.data.razorpayOrderId,
+
+    handler: async function (response) {
+      await verifyPayment(response);
+
+      clearCart();
+      onOrderComplete(orderCode);
+    },
+  };
+
+  const rzp = new window.Razorpay(options);
+  rzp.open();
+};
 
   const paymentMethod = watch("paymentMethod");
   const shippingMethod = watch("shippingMethod");
@@ -68,17 +97,28 @@ export default function CheckoutForm({ onOrderComplete }) {
   const total = subtotal + shipping + tax;
 
   const onSubmit = async (data) => {
-    const payload = mapCartToOrderPayload({
-      cart,
-      formData: data,
-    });
+  const payload = mapCartToOrderPayload({
+    cart,
+    formData: data,
+  });
 
-    const success = await placeOder(payload);
-    if (success) {
-      onOrderComplete();
-      clearCart();
-    }
-  };
+  const order = await placeOder(payload);
+
+  if (!order) return;
+
+  // COD flow
+  if (data.paymentMethod === "cod") {
+    onOrderComplete(order.orderCode);
+    clearCart();
+    return;
+  }
+
+  // Razorpay flow
+  if (data.paymentMethod === "card") {
+    await handleRazorpayPayment(order.orderCode);
+  }
+};
+
 
   return (
     <form
