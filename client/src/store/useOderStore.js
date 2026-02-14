@@ -46,7 +46,6 @@ export const useOrderStore = create((set) => ({
     try {
       set({ loadingOrderDetail: true, orderDetailError: null });
       const orderDetail = await api.get(`/orders/${id}`);
-      console.log(orderDetail);
       set({ orderDetail: orderDetail, loadingOrderDetail: false });
     } catch (error) {
       set({ loadingOrderDetail: false, orderDetailError: error });

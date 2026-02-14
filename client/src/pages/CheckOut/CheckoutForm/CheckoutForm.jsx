@@ -117,7 +117,6 @@ const handleRazorpayPayment = async (orderCode) => {
     });
 
     const order = await placeOder(payload);
-console.log(order)
     if (!order) return;
 
     // COD flow
