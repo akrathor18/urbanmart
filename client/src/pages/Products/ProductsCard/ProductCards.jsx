@@ -71,7 +71,7 @@ function ProductCard({ products }) {
         {/* Desktop Hover Add to Cart Button */}
         {inStock && (
           <div
-            className="absolute inset-x-0 bottom-0 p-3 hidden sm:block
+            className="absolute inset-x-0 bottom-0 p-3 hidden lg:block
                        opacity-0 translate-y-2
                        transition-all duration-300 ease-out
                        group-hover:opacity-100 group-hover:translate-y-0"
@@ -185,7 +185,7 @@ function ProductCard({ products }) {
                        py-2.5 px-4 rounded-lg text-sm font-medium
                        transition-all duration-300
                        shadow-sm hover:shadow-md active:scale-[0.98]
-                       sm:hidden"
+                       lg:hidden"
           >
             <ShoppingCart className="h-4 w-4" />
             <span>Add to Cart</span>

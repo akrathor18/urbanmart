@@ -25,7 +25,6 @@ export const getProductsById = async (id) => {
       name: true,
       price: true,
       image: true,
-      inStock: true,
       stock: true,
       rating: true,
       review: true,
