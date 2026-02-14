@@ -31,7 +31,7 @@ export default function PaymentMethod({ register }) {
             <input
               type="radio"
               {...register("paymentMethod")}
-              value="cod"
+              value="COD"
               className="mr-3"
             />
             <div className="flex items-center">

@@ -64,7 +64,7 @@ export const verifyPaymentService = async ({
 }) => {
   // Generate expected signature
   const generatedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_SECRET)
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
     .update(`${razorpay_order_id}|${razorpay_payment_id}`)
     .digest("hex");
 
@@ -100,17 +100,44 @@ export const verifyPaymentService = async ({
     });
 
     // Reduce stock safely
-    for (const item of order.items) {
-      await tx.product.update({
-        where: { id: item.productId },
-        data: {
-          stock: {
-            decrement: item.quantity,
-          },
-        },
-      });
-    }
+   for (const item of order.items) {
+  const product = await tx.product.findUnique({
+    where: { id: item.productId },
+    select: { stock: true },
+  });
+
+  if (product.stock < item.quantity) {
+    throw new Error(`Insufficient stock for product ${item.productId}`);
+  }
+
+  await tx.product.update({
+    where: { id: item.productId },
+    data: {
+      stock: {
+        decrement: item.quantity,
+      },
+    },
+  });
+}
   });
 
   return "VERIFIED";
+};
+
+// payment.service.js
+export const handlePaymentFailure = async (razorpay_order_id) => {
+  const order = await prisma.order.findUnique({
+    where: { razorpayOrderId: razorpay_order_id },
+  });
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  if (order.status === "PENDING_PAYMENT") {
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { status: "FAILED" },
+    });
+  }
 };

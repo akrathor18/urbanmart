@@ -55,33 +55,53 @@ export default function CheckoutForm({ onOrderComplete }) {
   if (loading) {
     return <CheckoutFormSkeleton />;
   }
-  const handleRazorpayPayment = async (orderCode) => {
+const handleRazorpayPayment = async (orderCode) => {
+  try {
     const scriptLoaded = await loadRazorpayScript();
     if (!scriptLoaded) {
-      alert("Razorpay failed to load");
+      alert("Razorpay failed to load. Please refresh and try again.");
       return;
     }
 
-    const {data} = await createPayment(orderCode);
-    console.log(data)
+    const { data } = await createPayment(orderCode);
+    
     const options = {
       key: data.key,
       amount: data.amount,
       currency: data.currency,
       order_id: data.razorpayOrderId,
-
+      name: "Your Store Name",
+      description: `Order ${orderCode}`,
+      
       handler: async function (response) {
-        await verifyPayment(response);
-
-        clearCart();
-        onOrderComplete(orderCode);
+        try {
+          await verifyPayment(response);
+          clearCart();
+          onOrderComplete(orderCode);
+        } catch (error) {
+          console.error("Payment verification failed:", error);
+          alert("Payment verification failed. Please contact support with order code: " + orderCode);
+        }
+      },
+      
+      modal: {
+        ondismiss: function() {
+          alert("Payment cancelled. Your order is still pending.");
+        }
       },
     };
 
     const rzp = new window.Razorpay(options);
+    rzp.on('payment.failed', function (response) {
+      alert("Payment failed: " + response.error.description);
+    });
     rzp.open();
-  };
-
+    
+  } catch (error) {
+    console.error("Payment initiation failed:", error);
+    alert("Failed to initiate payment. Please try again.");
+  }
+};
   const paymentMethod = watch("paymentMethod");
   const shippingMethod = watch("shippingMethod");
 
@@ -101,7 +121,7 @@ console.log(order)
     if (!order) return;
 
     // COD flow
-    if (data.paymentMethod === "cod") {
+    if (data.paymentMethod === "COD") {
       onOrderComplete(order.orderCode);
       clearCart();
       return;
@@ -127,9 +147,9 @@ console.log(order)
       >
         {isPlacingOrder
           ? "Placing order..."
-          : paymentMethod === "card"
-            ? `Pay ${formatPrice(subtotal)}`
-            : "Place Order"}
+          : paymentMethod === "RAZORPAY"
+  ? `Pay ${formatPrice(subtotal)}`
+  : "Place Order"}
       </button>
     </form>
   );

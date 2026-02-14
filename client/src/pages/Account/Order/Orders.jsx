@@ -15,7 +15,7 @@ import OrderListSkeleton from "./OrderListSkeleton/OrderListSkeleton";
 import ErrorState from "@/components/ErrorState";
 import { useOrderStore } from "@/store/useOderStore";
 import { useNavigate } from "react-router-dom";
-
+import statusConfig from "@/utils/statusConfig";
 function Orders() {
   const navigate = useNavigate();
   const { getOders, orders, loading, error } = useOrderStore();
@@ -56,32 +56,6 @@ function Orders() {
   }
 
   // Status configuration
-  const getStatusConfig = (status) => {
-    const configs = {
-      DELIVERED: {
-        color: "bg-green-50 text-green-700 border-green-200",
-        icon: CheckCircle,
-        label: "Delivered"
-      },
-      PENDING: {
-        color: "bg-amber-50 text-amber-700 border-amber-200",
-        icon: Clock,
-        label: "Pending"
-      },
-      PROCESSING: {
-        color: "bg-blue-50 text-blue-700 border-blue-200",
-        icon: Package,
-        label: "Processing"
-      },
-      SHIPPED: {
-        color: "bg-purple-50 text-purple-700 border-purple-200",
-        icon: Truck,
-        label: "Shipped"
-      }
-    };
-    return configs[status] || configs.PENDING;
-  };
-
   return (
     <div className="max-w-5xl mx-auto">
       {/* Header */}
@@ -102,8 +76,8 @@ function Orders() {
       {/* Orders List */}
       <div className="space-y-4 sm:space-y-5">
         {orders.map((order) => {
-          const statusConfig = getStatusConfig(order.status);
-          const StatusIcon = statusConfig.icon;
+          const currentStatus = statusConfig[order.status] || statusConfig.pending;
+          const StatusIcon = currentStatus.icon;
 
           return (
             <div
@@ -135,10 +109,10 @@ function Orders() {
                 <div className="flex flex-col sm:items-end gap-2">
                   {/* Status Badge */}
                   <span
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium border ${statusConfig.color} w-fit`}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium border ${currentStatus.color} w-fit`}
                   >
                     <StatusIcon className="h-3.5 w-3.5 flex-shrink-0" />
-                    {statusConfig.label}
+                    {currentStatus.label}
                   </span>
 
                   {/* Total Amount */}
