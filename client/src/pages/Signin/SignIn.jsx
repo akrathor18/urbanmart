@@ -8,7 +8,7 @@ import { syncUserDataAfterAuth } from "@/utils/syncUserData";
 
 const DEMO_CREDENTIALS = {
   email: "demo@example.com",
-  password: "demo123",
+  password: "demo@123",
 };
 
 export default function Signin() {
@@ -46,7 +46,7 @@ export default function Signin() {
     }
   };
 
-  /* ✅ FIX #3: Add migration to demo login */
+  /*  Add migration to demo login */
   const handleDemoLogin = async () => {
     const success = await signIn({
       email: DEMO_CREDENTIALS.email,
