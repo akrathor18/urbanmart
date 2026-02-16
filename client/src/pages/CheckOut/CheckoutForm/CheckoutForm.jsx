@@ -70,7 +70,7 @@ const handleRazorpayPayment = async (orderCode) => {
       amount: data.amount,
       currency: data.currency,
       order_id: data.razorpayOrderId,
-      name: "Your Store Name",
+      name: "UrbanMart",
       description: `Order ${orderCode}`,
       
       handler: async function (response) {

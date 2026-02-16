@@ -21,7 +21,7 @@ export const orderProducts = async ({ userId, items, address, payment }) => {
       total += product.price * item.quantity;
     }
 
-    //Create order
+    //Create order 
     const order = await tx.order.create({
       data: {
         orderCode: generateOrderCode(),
@@ -29,7 +29,7 @@ export const orderProducts = async ({ userId, items, address, payment }) => {
         paymentMethod: payment,
         totalAmount: total,
 
-        status: payment === "COD" ? "PAID" : "CREATED",
+        status: payment === "COD" ? "PENDING_PAYMENT" : "CREATED",
 
         expiresAt:
           payment === "RAZORPAY" ? new Date(Date.now() + 15 * 60 * 1000) : null,
