@@ -28,10 +28,6 @@ function Orders() {
     return <OrderListSkeleton />;
   }
 
-  if (error) {
-    return <ErrorState message={error} />;
-  }
-
   if (orders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 sm:py-24 px-4">
@@ -53,6 +49,10 @@ function Orders() {
         </button>
       </div>
     );
+  }
+
+  if (error) {
+    return <ErrorState message={error} />;
   }
 
   // Status configuration

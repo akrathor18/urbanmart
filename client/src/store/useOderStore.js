@@ -13,8 +13,8 @@ export const useOrderStore = create((set) => ({
     set({ isPlacingOrder: true, error: null });
     const promise = api.post("/orders", playload);
     toast.promise(promise, {
-      pending: "Placing oder",
-      success: "Order Placed !",
+      pending: "Placing order",
+      success: "Order created!",
       error: {
         render({ data }) {
           return data || "placing Order failed";
