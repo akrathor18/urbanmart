@@ -116,7 +116,7 @@ This is a short list of important endpoints implemented in the server (see sourc
 Example: fetch products from the API (replace host/port if needed):
 
 ```bash
-curl http://localhost:5000/api/products
+ http://localhost:5000/api/products
 ```
 
 For detailed API usage, refer to the controller files under `server/src/controllers`.
