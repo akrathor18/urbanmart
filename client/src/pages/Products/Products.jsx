@@ -88,7 +88,7 @@ export default function ProductsPage() {
                 const isChecked = category === item.name;
                 return (
                   <label
-                    key={item.name}
+                    key={item.name}   
                     className="flex items-center gap-3 cursor-pointer group hover:bg-slate-50 p-2 rounded-lg transition-colors"
                   >
                     <div className="relative">
@@ -201,7 +201,7 @@ export default function ProductsPage() {
           {/* TOP BAR */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
             <p className="text-gray-500 text-sm">
-              Showing {products.length} products
+              Showing {products?.length || 0} products
             </p>
 
             <select

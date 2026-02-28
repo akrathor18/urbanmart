@@ -1,5 +1,4 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
 
 import authRoutes from "./routes/auth.route.js";
 import productRoutes from "./routes/product.route.js";
@@ -11,11 +10,22 @@ import wishlistRoutes from "./routes/wishlist.route.js";
 import paymentRoutes from "./routes/payment.route.js"
 
 import cookieParser from "cookie-parser";
-
+import helmet from "helmet";
+import rateLimit from 'express-rate-limit';
 import cors from "cors";
 const app = express();
-const prisma = new PrismaClient();
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 200, // limit each IP to 200 requests per windowMs
+});
+app.set("trust proxy", 1);
 app.use(cookieParser());
+app.use(limiter);
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 
 app.use(
   cors({
@@ -26,8 +36,8 @@ app.use(
     credentials: true,
   }),
 );
-
 app.use(express.json());
+
 app.get("/", (req, res) => {
   res.status(200).json("hello world");
 });
