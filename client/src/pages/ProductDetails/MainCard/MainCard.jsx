@@ -2,7 +2,7 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import React, { useState } from "react";
 import { formatPrice } from "@/utils/formatPrice";
 import { toggleWishlistAction } from "@/service/wishlist.action";
-import { updateCartQtyAction } from "@/service/cart.action";
+import { addToCartAction } from "@/service/cart.action";
 import {
   Star,
   Heart,
@@ -13,15 +13,10 @@ import {
   Plus,
   Minus,
 } from "lucide-react";
-import { toast } from "react-toastify";
 
 function MainCard({ product }) {
-  const updateQuantity = (productId, quantity) => {
-    const success = updateCartQtyAction(productId, quantity);
-    if (success) {
-      toast.dismiss();
-      toast.success("Added to cart");
-    }
+  const handleAddToCart = () => {
+    addToCartAction(product, quantity);
   };
   
   const inStock = product?.stock > 0 || 0;
@@ -205,7 +200,7 @@ function MainCard({ product }) {
             {/* Add to Cart Button */}
             <button
               disabled={!inStock}
-              onClick={() => updateQuantity(product.id, quantity)}
+              onClick={handleAddToCart}
               className="flex-1 sm:flex-initial bg-gray-900 hover:bg-gray-800 active:bg-black text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg flex items-center justify-center gap-2.5 font-medium transition-all disabled:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-500 shadow-sm hover:shadow-md"
             >
               <ShoppingCart className="h-5 w-5" />
